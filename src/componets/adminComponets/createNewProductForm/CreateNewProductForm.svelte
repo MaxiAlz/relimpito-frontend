@@ -1,21 +1,21 @@
 <script>
-  import { onMount } from "svelte";
+  import { createEventDispatcher, onMount } from "svelte";
   import { httpRequest } from "../../../helpers/httpRequest";
-  import { createForm, ErrorMessage } from "svelte-forms-lib";
+  import { createForm } from "svelte-forms-lib";
   import * as yup from "yup";
   import FormErrorMsg from "../../formErrorMsg/FormErrorMsg.svelte";
+  import AlertToast from "../../alertsUser/AlertToast.svelte";
+  import Loanding from "../../loader/Loanding.svelte";
 
-  let available = true;
-  let selectedTags = [];
-  let selectedCategories = [];
-  let selectedItem = {};
-  let isLoading = false;
-  let categoriesOptions = [];
+  let available = true,
+    selectedTags = [],
+    selectedCategories = [],
+    selectedItem = {},
+    isLoading = false,
+    categoriesOptions = [];
 
   const errorMsg = "Este campo es requerido*";
-
-  // $: console.log("selectedCategories :>> ", selectedCategories);
-  // $: console.log("$form.state :>> ", $state);
+  const dispatch = createEventDispatcher();
 
   onMount(() => {
     getCategories();
@@ -28,10 +28,25 @@
 
   const createNewProduct = async (newProductValues) => {
     isLoading = true;
-    const { data } = await httpRequest("/products", "post", {
-      data: newProductValues,
-    });
-    console.log("data :>> ", data);
+    try {
+      const { status, statusText } = await httpRequest("/products", "post", {
+        data: newProductValues,
+      });
+      dispatch("createProductResponse", {
+        status,
+        statusText,
+        msg: "Producto creado",
+        alertType: "success",
+      });
+    } catch (error) {
+      console.error("error :>> ", error);
+      dispatch("createProductResponse", {
+        status: error.status,
+        statusText: error.statusText,
+        msg: "Error al creat producto, pruebe mas tarde",
+        alertType: "error",
+      });
+    }
     isLoading = false;
   };
 
@@ -57,16 +72,16 @@
     initialValues: {
       imgesProduct: [],
       productName: "",
-      wholesalePrice: 0,
+      wholesalePrice: "",
       retailPrice: "",
       productCode: "",
-      stock: 0,
+      stock: "",
       productDescription: "",
       categories: selectedTags,
       isActive: true,
     },
     validationSchema: yup.object().shape({
-      imgesProduct: yup.array() /* .required() */,
+      // imgesProduct: yup.array().length(5, "solo puede subir hasta 5 imagenes"),
       productName: yup.string().required(errorMsg),
       wholesalePrice: yup.string().required(errorMsg),
       retailPrice: yup.string().required(errorMsg),
@@ -77,24 +92,27 @@
       isActive: yup.boolean(),
     }),
     onSubmit: (newProductValues) => {
-      console.log("values :>> ", newProductValues);
       createNewProduct(newProductValues);
     },
   });
 </script>
 
+{#if isLoading}
+  <Loanding />
+{/if}
 <form on:submit={handleSubmit}>
   <section class="flex flex-col items-center">
     <div>
       <span class="text-primary"
-        >Fotos · 0/5 - Puedes agregar un máximo de 5 fotos.</span
+        >{`Fotos · ${$form.imgesProduct.length}/5 - Puedes agregar un máximo de 5 fotos.`}</span
       >
     </div>
     <div>
-      <button>
+      <button type="button">
         <div class="card-add-images">
           <input
             type="file"
+            multiple
             name="imgesProduct"
             on:change={handleChange}
             bind:value={$form.imgesProduct}
@@ -102,6 +120,7 @@
           cargar archivos
         </div>
       </button>
+      <FormErrorMsg error={$errors.imgesProduct} />
     </div>
   </section>
   <section class="my-3">

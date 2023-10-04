@@ -39,7 +39,7 @@
   $: {
     // Asigna paramsRouter a selectedItem cada vez que paramsRouter cambia
     selectedItem =
-      dashboardItems.find((item) => item.value === paramsRouter.section) ||
+      dashboardItems.find((item) => item.value === paramsRouter?.section) ||
       dashboardItems[0];
   }
 </script>

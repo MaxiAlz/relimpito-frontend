@@ -4,11 +4,13 @@
   import Loanding from "../../loader/Loanding.svelte";
   import CreateNewProductForm from "../../adminComponets/createNewProductForm/CreateNewProductForm.svelte";
   import Modal from "../../modal/Modal.svelte";
+  import AlertToast from "../../alertsUser/AlertToast.svelte";
 
   let isLoading = false;
   let products = [];
   let paginationParams;
-  let isEditing = false;
+  let isEditing = false,
+    alertParams = {};
 
   let isModalCreateProductOpen = false;
 
@@ -22,15 +24,38 @@
     products = data?.data;
     isLoading = false;
   };
+
+  const handleResponseCreateProduct = (event) => {
+    alertParams.status = event.detail.status;
+    alertParams.statusText = event.detail.statusText;
+    alertParams.msg = event.detail.msg;
+    alertParams.alertType = event.detail.alertType;
+    alertParams.open = true;
+
+    isModalCreateProductOpen = false;
+
+    getProducts();
+  };
+  $: console.log("alertParams :>> ", alertParams);
+
+  // $: console.log("responseCreateProductMsg :>> ", responseCreateProductMsg);
 </script>
 
+<AlertToast
+  alertType={alertParams.alertType}
+  message={alertParams.msg}
+  open={alertParams.open}
+  on:closeAlert={() => (alertParams.open = false)}
+/>
 {#if isModalCreateProductOpen}
   <Modal
     open={isModalCreateProductOpen}
     title={isEditing ? "Editar Articulos" : "Crear nuevo articulo"}
     on:close={() => (isModalCreateProductOpen = false)}
   >
-    <CreateNewProductForm />
+    <CreateNewProductForm
+      on:createProductResponse={handleResponseCreateProduct}
+    />
   </Modal>
 {/if}
 

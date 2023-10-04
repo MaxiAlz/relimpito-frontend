@@ -1,15 +1,12 @@
-// Importa la librería Axios
-// const axios = require('axios');
 import axios from 'axios';
 
-// import { push } from 'svelte-spa-router';
-// import { logoutStoreUser, getStorageTokenUser } from '../../stores/userData.store';
-
-/*
+/**
 * @param {String} url - URL del servicio que se quiere consumir.
 * @param {string} method - Metodo que se quiere realizar ['GET','POST','PUT','DELETE']
-* @param {Object} data - Datos que se desean enviar (por ejemplo, body)
+* @param {Object} data - Datos que se desean enviar (por ejemplo, body) => usar la sentencia {data: values}
+ * 
  */
+
 
 
 // Función genérica para realizar peticiones HTTP
@@ -45,6 +42,15 @@ async function httpRequest(url, method, data = null) {
 export { httpRequest }
 
 // Ejemplos de uso
+
+/**
+ * @param valuesObject: objeto que contiene los datos a enviar al backend. strapi se debe enviar un objeto {data: valuesObject} 
+ */ 
+// const { data } = await httpRequest("/products", "post", {
+//   data: newProductValues,
+// });
+
+
 // (async () => {
 //   try {
 //     const resultadoGET = await httpRequest('https://jsonplaceholder.typicode.com/posts/1', 'GET');
