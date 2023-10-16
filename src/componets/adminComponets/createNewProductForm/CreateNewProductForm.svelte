@@ -4,8 +4,8 @@
   import { createForm } from "svelte-forms-lib";
   import * as yup from "yup";
   import FormErrorMsg from "../../formErrorMsg/FormErrorMsg.svelte";
-  import AlertToast from "../../alertsUser/AlertToast.svelte";
   import Loanding from "../../loader/Loanding.svelte";
+  import { validationSchema } from "./formValues";
 
   let available = true,
     selectedTags = [],
@@ -14,7 +14,6 @@
     isLoading = false,
     categoriesOptions = [];
 
-  const errorMsg = "Este campo es requerido*";
   const dispatch = createEventDispatcher();
 
   onMount(() => {
@@ -70,7 +69,7 @@
 
   const { form, errors, state, handleChange, handleSubmit } = createForm({
     initialValues: {
-      imgesProduct: [],
+      imagesProduct: [],
       productName: "",
       wholesalePrice: "",
       retailPrice: "",
@@ -80,17 +79,7 @@
       categories: selectedTags,
       isActive: true,
     },
-    validationSchema: yup.object().shape({
-      // imgesProduct: yup.array().length(5, "solo puede subir hasta 5 imagenes"),
-      productName: yup.string().required(errorMsg),
-      wholesalePrice: yup.string().required(errorMsg),
-      retailPrice: yup.string().required(errorMsg),
-      productCode: yup.string().required(errorMsg),
-      stock: yup.string().required(errorMsg),
-      productDescription: yup.string().required(errorMsg),
-      categories: yup.array().required(errorMsg),
-      isActive: yup.boolean(),
-    }),
+    validationSchema,
     onSubmit: (newProductValues) => {
       createNewProduct(newProductValues);
     },
@@ -104,7 +93,7 @@
   <section class="flex flex-col items-center">
     <div>
       <span class="text-primary"
-        >{`Fotos · ${$form.imgesProduct.length}/5 - Puedes agregar un máximo de 5 fotos.`}</span
+        >{`Fotos · ${$form.imagesProduct.length}/5 - Puedes agregar un máximo de 5 fotos.`}</span
       >
     </div>
     <div>
@@ -115,12 +104,12 @@
             multiple
             name="imgesProduct"
             on:change={handleChange}
-            bind:value={$form.imgesProduct}
+            bind:value={$form.imagesProduct}
           />
           cargar archivos
         </div>
       </button>
-      <FormErrorMsg error={$errors.imgesProduct} />
+      <FormErrorMsg error={$errors.imagesProduct} />
     </div>
   </section>
   <section class="my-3">

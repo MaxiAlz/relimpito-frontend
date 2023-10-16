@@ -2,10 +2,15 @@ import * as yup from "yup";
 import { errorMsg } from "../../constants/defaultMessages";
 
 const initialValues = {
-  name: "",
-  email: "",
+  imgesProduct: [],
+  productName: "",
+  wholesalePrice: "",
+  retailPrice: "",
+  productCode: "",
+  stock: "",
+  productDescription: "",
+  isActive: true,
 }
-
 const validationSchema = yup.object().shape({
   imgesProduct: yup.array().length(5, "solo puede subir hasta 5 imagenes"),
   productName: yup.string().required(errorMsg),

@@ -2,19 +2,22 @@
   import { onMount } from "svelte";
   import { httpRequest } from "../../../helpers/httpRequest";
   import Loanding from "../../loader/Loanding.svelte";
-  import CreateNewProductForm from "../../adminComponets/createNewProductForm/CreateNewProductForm.svelte";
+  import CreateNewProductForm from "../createNewProductForm/CreateNewProductForm.svelte";
   import Modal from "../../modal/Modal.svelte";
   import AlertToast from "../../alertsUser/AlertToast.svelte";
+  import EditMultipleProducts from "../EditArticule/EditMultipleProducts.svelte";
+  import EditArticule from "../EditArticule/EditArticule.svelte";
 
   let isLoading = false;
   let products = [];
   let paginationParams;
-  let isEditing = false,
+  let selectedMultipleArticulesToEdit = [],
     alertParams = {};
 
   let isModalCreateProductOpen = false;
+  let isModalEditProdutOpen = false;
+  let selectedEditArticule;
 
-  $: console.log("paginationParams :>> ", paginationParams);
   onMount(() => getProducts());
 
   const getProducts = async () => {
@@ -25,7 +28,7 @@
     isLoading = false;
   };
 
-  const handleResponseCreateProduct = (event) => {
+  const handleResponseProductStatus = (event) => {
     alertParams.status = event.detail.status;
     alertParams.statusText = event.detail.statusText;
     alertParams.msg = event.detail.msg;
@@ -33,12 +36,33 @@
     alertParams.open = true;
 
     isModalCreateProductOpen = false;
+    isModalEditProdutOpen = false;
 
     getProducts();
   };
-  $: console.log("alertParams :>> ", alertParams);
 
-  // $: console.log("responseCreateProductMsg :>> ", responseCreateProductMsg);
+  const handleSelectArticules = (productId, articuleName) => {
+    const result = selectedMultipleArticulesToEdit.find(
+      (productInList) => productInList.id === productId
+    );
+    if (result) {
+      selectedMultipleArticulesToEdit = selectedMultipleArticulesToEdit.filter(
+        (productInList) => productInList.id !== productId
+      );
+    }
+    if (!result) {
+      selectedMultipleArticulesToEdit = [
+        ...selectedMultipleArticulesToEdit,
+        { id: productId, name: articuleName },
+      ];
+      // articulestoEdit = [...articulestoEdit, { name: articuleName }];
+    }
+  };
+
+  const handleEditProduct = (productId) => {
+    isModalEditProdutOpen = true;
+    selectedEditArticule = productId;
+  };
 </script>
 
 <AlertToast
@@ -47,20 +71,45 @@
   open={alertParams.open}
   on:closeAlert={() => (alertParams.open = false)}
 />
+
+<!-- modal crear nuevo producto -->
 {#if isModalCreateProductOpen}
   <Modal
     open={isModalCreateProductOpen}
-    title={isEditing ? "Editar Articulos" : "Crear nuevo articulo"}
+    title={selectedMultipleArticulesToEdit.length > 0
+      ? "Editar Articulos"
+      : "Crear nuevo articulo"}
     on:close={() => (isModalCreateProductOpen = false)}
   >
-    <CreateNewProductForm
-      on:createProductResponse={handleResponseCreateProduct}
+    {#if selectedMultipleArticulesToEdit.length > 0}
+      <EditMultipleProducts
+        selectedArticulesToEdit={selectedMultipleArticulesToEdit}
+      />
+    {:else}
+      <CreateNewProductForm
+        on:createProductResponse={handleResponseProductStatus}
+      />
+    {/if}
+  </Modal>
+{/if}
+
+{#if isModalEditProdutOpen}
+  <Modal
+    open={isModalEditProdutOpen}
+    title="Editar articulo"
+    on:close={() => {
+      (isModalEditProdutOpen = false), (selectedEditArticule = null);
+    }}
+  >
+    <EditArticule
+      {selectedEditArticule}
+      on:editProductResponse={handleResponseProductStatus}
     />
   </Modal>
 {/if}
 
 <main class="w-full">
-  <aside class="flex justify-between items-center">
+  <section class="flex justify-between items-center headerTable">
     <div
       class=" container form-control w-full max-w-xs m-4 flex justify-center"
     >
@@ -80,14 +129,18 @@
         on:click={() => (isModalCreateProductOpen = true)}
       >
         <span class="material-symbols-outlined">
-          {isEditing ? "edit" : "add_circle"}</span
+          {selectedMultipleArticulesToEdit.length > 0
+            ? "edit"
+            : "add_circle"}</span
         >
-        {isEditing ? "Editar Articulos" : "Crear nuevo articulo"}</button
+        {selectedMultipleArticulesToEdit.length > 0
+          ? "Editar Articulos"
+          : "Crear nuevo articulo"}</button
       >
     </div>
-  </aside>
+  </section>
   <div class="divider m-0 p-0" />
-  <article class="overflow-x-auto usersTable px-20">
+  <section class="overflow-x-auto articulesTable px-20">
     <table class="table">
       <!-- head -->
       <thead class="text-primary uppercase">
@@ -98,7 +151,7 @@
           <th>$ Por Mayor</th>
           <th>$ Por Menor</th>
           <th>stock</th>
-          <th>stock</th>
+          <th>acciones</th>
           <th />
         </tr>
       </thead>
@@ -116,10 +169,19 @@
             </h3>
           </div>
         {:else}
-          {#each products as product}
+          {#each products as product (product.id)}
             <tr>
               <td>
-                <input type="checkbox" checked={false} class="checkbox" />
+                <input
+                  type="checkbox"
+                  checked={false}
+                  on:change={() =>
+                    handleSelectArticules(
+                      product.id,
+                      product?.attributes?.productName
+                    )}
+                  class="checkbox"
+                />
               </td>
               <td>
                 <span class="font-semibold"
@@ -142,8 +204,18 @@
                 <button
                   class="btn btn-primary btn-sm btn-outline tooltip"
                   data-tip="Editar"
-                  on:click={() => console.log("click :>> ")}
+                  on:click={() => {
+                    handleEditProduct(product.id);
+                  }}
                   ><span class="material-symbols-outlined"> settings </span>
+                </button>
+                <button
+                  class="btn btn-primary btn-sm btn-outline tooltip"
+                  data-tip="ocultar"
+                  on:click={() => console.log("click :>> ")}
+                  ><span class="material-symbols-outlined">
+                    visibility_off
+                  </span>
                 </button>
               </td>
             </tr>
@@ -159,7 +231,7 @@
           <th>$ Por Mayor</th>
           <th>$ Por Menor</th>
           <th>stock</th>
-          <th>stock</th>
+          <th>acciones</th>
           <th />
         </tr>
       </tfoot>
@@ -180,5 +252,14 @@
       <!-- {/if} -->
     </div>
     <div class="divider m-0" />
-  </article>
+  </section>
 </main>
+
+<style>
+  .headerTable {
+    height: 12vh;
+  }
+  .articulesTable {
+    height: 77vh;
+  }
+</style>

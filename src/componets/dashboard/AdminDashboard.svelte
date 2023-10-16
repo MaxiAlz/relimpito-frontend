@@ -1,30 +1,12 @@
 <script>
   import { onMount } from "svelte";
-  import ArticulosTab from "./adminItemsDashboard/ArticulosTab.svelte";
-  import OrdesTab from "./adminItemsDashboard/OrdesTab.svelte";
-  import PourchaserTab from "./adminItemsDashboard/PourchaserTab.svelte";
+  import { dashboardItems } from "../adminComponets/adminItemsDashboard/dashboardItemsRender";
   import { navigate } from "svelte-routing";
 
   export let paramsRouter;
 
-  const dashboardItems = [
-    {
-      id: 0,
-      value: "articulos",
-      component: ArticulosTab,
-    },
-    {
-      id: 1,
-      value: "ordenes",
-      component: OrdesTab,
-    },
-    {
-      id: 2,
-      value: "facturador",
-      component: PourchaserTab,
-    },
-  ];
   let selectedItem = {};
+  $: console.log("paramsRouter :>> ", paramsRouter);
 
   onMount(() => {
     selectedItem = dashboardItems[0];
