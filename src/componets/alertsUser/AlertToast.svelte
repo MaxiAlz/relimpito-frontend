@@ -1,49 +1,46 @@
 <script>
-  import { createEventDispatcher } from "svelte";
-
-  export let message,
-    time = 3000,
-    open = false,
-    alertType;
-
-  const dispatch = createEventDispatcher();
-
-  const closeAlert = () => {
-    dispatch("closeAlert", {
-      state: false,
-    });
-  };
-  setTimeout(() => closeAlert(), time);
+  import { flip } from "svelte/animate";
+  import { fly } from "svelte/transition";
+  import { notifications } from "./alert";
 </script>
 
-{#if open}
-  <div class="toast toast-end z-50">
-    {#if alertType === "success"}
-      <div class="alert alert-success">
-        <span class="material-symbols-outlined"> check_circle </span>
-        <span>{message}</span>
-        <button class="btn btn-circle btn-ghost btn-sm" on:click={closeAlert}
-          >x</button
-        >
+<div class="notifications">
+  {#each $notifications as notification (notification.id)}
+    <div
+      animate:flip
+      class="alert {[notification.type]} shadow-lg"
+      transition:fly={{ x: 30 }}
+    >
+      <div class="flex">
+        <span class="material-symbols-outlined mr-2">
+          {notification.icon}
+        </span>
+        <span>{notification.message}</span>
       </div>
-    {/if}
-    {#if alertType == "error"}
-      <div class="alert alert-error">
-        <span class="material-symbols-outlined"> cancel </span>
-        <span>{message}</span>
-        <button class="btn btn-circle btn-ghost btn-sm" on:click={closeAlert}
-          >x</button
-        >
-      </div>
-    {/if}
-    {#if alertType == "info"}
-      <div class="alert alert-error">
-        <span class="material-symbols-outlined"> info </span>
-        <span>{message}</span>
-        <button class="btn btn-circle btn-ghost btn-sm" on:click={closeAlert}
-          >x</button
-        >
-      </div>
-    {/if}
-  </div>
-{/if}
+    </div>
+  {/each}
+</div>
+
+<style>
+  .notifications {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    margin: 0 auto;
+    padding: 0;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    pointer-events: none;
+    min-width: 30%;
+  }
+
+  .content {
+    padding: 10px;
+    display: block;
+    color: white;
+    font-weight: 500;
+  }
+</style>
