@@ -22,22 +22,19 @@
 
   const getProducts = async () => {
     isLoading = true;
-    const { data } = await httpRequest("/products", "get");
-    paginationParams = data?.meta?.pagination;
-    products = data?.data;
+    try {
+      const { data } = await httpRequest("/products", "get");
+      paginationParams = data?.meta?.pagination;
+      products = data?.data;
+    } catch (error) {
+      console.error("Error al obtener productos :>> ", error);
+    }
     isLoading = false;
   };
 
-  const handleResponseProductStatus = (event) => {
-    alertParams.status = event.detail.status;
-    alertParams.statusText = event.detail.statusText;
-    alertParams.msg = event.detail.msg;
-    alertParams.alertType = event.detail.alertType;
-    alertParams.open = true;
-
+  const productModificated = () => {
     isModalCreateProductOpen = false;
     isModalEditProdutOpen = false;
-
     getProducts();
   };
 
@@ -65,13 +62,6 @@
   };
 </script>
 
-<AlertToast
-  alertType={alertParams.alertType}
-  message={alertParams.msg}
-  open={alertParams.open}
-  on:closeAlert={() => (alertParams.open = false)}
-/>
-
 <!-- modal crear nuevo producto -->
 {#if isModalCreateProductOpen}
   <Modal
@@ -86,9 +76,7 @@
         selectedArticulesToEdit={selectedMultipleArticulesToEdit}
       />
     {:else}
-      <CreateNewProductForm
-        on:createProductResponse={handleResponseProductStatus}
-      />
+      <CreateNewProductForm on:productCreated={productModificated} />
     {/if}
   </Modal>
 {/if}
@@ -103,7 +91,7 @@
   >
     <EditArticule
       {selectedEditArticule}
-      on:editProductResponse={handleResponseProductStatus}
+      on:editProductResponse={productModificated}
     />
   </Modal>
 {/if}

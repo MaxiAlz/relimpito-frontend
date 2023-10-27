@@ -1,11 +1,17 @@
 <script>
   import { createEventDispatcher, onMount } from "svelte";
-  import { httpRequest } from "../../../helpers/httpRequest";
+  import {
+    httpFormDataRequest,
+    httpRequest,
+  } from "../../../helpers/httpRequest";
   import { createForm } from "svelte-forms-lib";
-  import * as yup from "yup";
   import FormErrorMsg from "../../formErrorMsg/FormErrorMsg.svelte";
   import Loanding from "../../loader/Loanding.svelte";
   import { validationSchema } from "./formValues";
+  import ImagenPreview from "../../imagenPreview/ImagenPreview.svelte";
+  import { notifications } from "../../alertsUser/alert";
+
+  const dispatch = createEventDispatcher();
 
   let available = true,
     selectedTags = [],
@@ -13,8 +19,7 @@
     selectedItem = {},
     isLoading = false,
     categoriesOptions = [];
-
-  const dispatch = createEventDispatcher();
+  let fileImages = [];
 
   onMount(() => {
     getCategories();
@@ -25,26 +30,50 @@
     categoriesOptions = data.data;
   };
 
+  const handleSubmitImages = async (
+    refProductId,
+    refProductColection,
+    fieldReference
+  ) => {
+    try {
+      const formData = new FormData();
+      fileImages.forEach((image) => {
+        formData.append(`files`, image, image.name);
+      });
+      formData.append("refId", `${refProductId}`);
+      formData.append("ref", refProductColection);
+      formData.append("field", fieldReference);
+
+      await httpFormDataRequest("/upload", "POST", formData);
+      notifications.success("Imagenes actualizadas", 3000);
+    } catch (error) {
+      notifications.error("Error al actualizar imagenes", 3000);
+      console.log("Error al cargar imagenes :>> ", error);
+    }
+  };
+
   const createNewProduct = async (newProductValues) => {
     isLoading = true;
     try {
-      const { status, statusText } = await httpRequest("/products", "post", {
-        data: newProductValues,
-      });
-      dispatch("createProductResponse", {
-        status,
-        statusText,
-        msg: "Producto creado",
-        alertType: "success",
-      });
+      const { status, statusText, data } = await httpRequest(
+        "/products",
+        "post",
+        {
+          data: newProductValues,
+        }
+      );
+      if (statusText === "OK" && status === 200 && data.data.id) {
+        notifications.success("Detalle de producto creado");
+        dispatch("productCreated");
+        await handleSubmitImages(
+          data.data.id,
+          "api::product.product",
+          "productPhoto"
+        );
+      }
     } catch (error) {
       console.error("error :>> ", error);
-      dispatch("createProductResponse", {
-        status: error.status,
-        statusText: error.statusText,
-        msg: "Error al creat producto, pruebe mas tarde",
-        alertType: "error",
-      });
+      notifications.error("Ocurrio un error al crear detalle de producto");
     }
     isLoading = false;
   };
@@ -58,6 +87,10 @@
     return;
   };
 
+  const handlefileImages = (e) => {
+    fileImages = e.detail;
+  };
+
   const deleteCategoryTag = (tag) => {
     const result = selectedTags.find(({ id }) => id === tag.id);
     if (result) {
@@ -67,7 +100,7 @@
     } else return;
   };
 
-  const { form, errors, state, handleChange, handleSubmit } = createForm({
+  const { form, errors, handleChange, handleSubmit } = createForm({
     initialValues: {
       imagesProduct: [],
       productName: "",
@@ -86,32 +119,14 @@
   });
 </script>
 
+<!-- <AlertToast /> -->
 {#if isLoading}
   <Loanding />
 {/if}
+<div>
+  <ImagenPreview on:fileImages={handlefileImages} />
+</div>
 <form on:submit={handleSubmit}>
-  <section class="flex flex-col items-center">
-    <div>
-      <span class="text-primary"
-        >{`Fotos · ${$form.imagesProduct.length}/5 - Puedes agregar un máximo de 5 fotos.`}</span
-      >
-    </div>
-    <div>
-      <button type="button">
-        <div class="card-add-images">
-          <input
-            type="file"
-            multiple
-            name="imgesProduct"
-            on:change={handleChange}
-            bind:value={$form.imagesProduct}
-          />
-          cargar archivos
-        </div>
-      </button>
-      <FormErrorMsg error={$errors.imagesProduct} />
-    </div>
-  </section>
   <section class="my-3">
     <div>
       <label class="label" for="articuleName">
@@ -263,10 +278,10 @@
 </form>
 
 <style>
-  .card-add-images {
+  /* .card-add-images {
     background-color: rgb(205, 205, 205);
     width: 25rem;
     height: 15rem;
     border-radius: 15px;
-  }
+  } */
 </style>
