@@ -7,8 +7,6 @@ import axios from 'axios';
  * 
  */
 
-
-
 // Función genérica para realizar peticiones HTTP
 async function httpRequest(url, method, data = null) {
 
@@ -27,8 +25,6 @@ async function httpRequest(url, method, data = null) {
   } catch (error) {
     if (error.response.status == 401) {
       alert("Error de autenticacion")
-      // logoutStoreUser()
-      // push('/')
     }
     // Manejo de errores
     if (error.response) {
@@ -39,7 +35,34 @@ async function httpRequest(url, method, data = null) {
 
   }
 }
-export { httpRequest }
+
+const httpFormDataRequest = async (url, method, formData)=>{
+try {
+    const response = await axios({
+      url: `http://${import.meta.env.VITE_API_BASE_URL}${url}`,
+      method,
+      data: formData,
+      headers: {
+        // Authorization: `Bearer ${$token}`,
+        "Content-Type": "multipart/form-data",
+        
+      }
+    });
+    return response
+
+  } catch (error) {
+    if (error.response.status == 401) {
+      alert("Error de autenticacion")
+    }
+    if (error.response) {
+      throw new Error(`Error en la petición: ${error.response.status} - ${error.response.statusText}`);
+    } else if (error.request) {
+      throw new Error('No se pudo obtener respuesta del servidor');
+    }
+  }
+
+}
+export { httpRequest ,httpFormDataRequest}
 
 // Ejemplos de uso
 
