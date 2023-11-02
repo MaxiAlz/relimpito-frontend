@@ -15,7 +15,6 @@ function createNotificationStore(timeout) {
         const icon = icons[type] || "default";
 
         _notifications.update(state => {
-            console.log('object :>> ', { id: id(), type, message, timeout, icon });
             return [...state, { id: id(), type, message, timeout, icon }];
         });
     }

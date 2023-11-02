@@ -26,7 +26,7 @@
     position: fixed;
     bottom: 2rem;
     right: 2rem;
-    margin: 0 auto;
+    margin: 2rem;
     padding: 0;
     z-index: 9999;
     display: flex;

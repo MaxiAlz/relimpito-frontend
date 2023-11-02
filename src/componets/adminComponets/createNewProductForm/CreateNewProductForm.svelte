@@ -124,7 +124,7 @@
   <Loanding />
 {/if}
 <div>
-  <ImagenPreview on:fileImages={handlefileImages} />
+  <ImagenPreview on:fileImages={handlefileImages} productPhotos={null} />
 </div>
 <form on:submit={handleSubmit}>
   <section class="my-3">

@@ -1,5 +1,8 @@
 <script>
-  import { createEventDispatcher } from "svelte";
+  import { createEventDispatcher, onMount } from "svelte";
+  import { httpRequest } from "../../helpers/httpRequest";
+  import { notifications } from "../alertsUser/alert";
+  import Loanding from "../loader/Loanding.svelte";
   /**
    * @argument refProductId id del producto en referencia en donde se quiere insertar las imagenes. ex=> 1
    * @argument refProductColection coleccion del producto (se encuentra en el controlador de la coleccion) ex=> api::product.product
@@ -9,24 +12,63 @@
 
   const dispatch = createEventDispatcher();
 
-  let urlImagesPreview = [];
-  let fileImages = [];
-  let selectedImage = null;
-  let limitImages = 2;
+  export let productPhotos;
+
+  let urlImagesPreview = []; //url local de las imagens a medida que se van subiendo
+  let fileImages = []; //aray de tipo file por cada imagen que se sube
+  let selectedImage = null; //imagen seleccionada en el preview
+  let limitImages = 2; //limite de imagenes para cargar
+  let isLoading = false;
+
+  $: console.log("productPhotos :>> ", productPhotos);
+
+  
+  if (productPhotos) {
+    urlImagesPreview = productPhotos.map((product) => product.attributes.url);
+    selectedImage = urlImagesPreview[0];
+  }
 
   $: dispatch("fileImages", fileImages);
+
+  const isPhotoExistInDataBase = (ulrPhotoRemoved) => {
+    if (productPhotos) {
+      const result = productPhotos.find(
+        (img) => img.attributes.url === ulrPhotoRemoved
+      );
+      if (result && confirm("Borrar imagen?")) {
+        deleteImageFromDataBase(result.id);
+      }
+    } else return;
+  };
+
+  const deleteImageFromDataBase = async (idPhoto) => {
+    isLoading = true;
+    try {
+      const httpResponse = await httpRequest(
+        `/upload/files/${idPhoto}`,
+        "DELETE"
+      );
+      notifications.info("La imagen fue borrada");
+    } catch (error) {
+      console.log("error al borrar imgagen :>> ", error);
+      notifications.error("No se pudo borrar la imagen");
+    }
+    isLoading = false;
+  };
 
   function handleImageUpload(event) {
     const file = event.target.files[0];
     const imageURL = URL.createObjectURL(file);
     fileImages = [...fileImages, file];
     urlImagesPreview = [...urlImagesPreview, imageURL];
+    selectedImage = urlImagesPreview[urlImagesPreview.length - 1];
   }
 
   function removeImage() {
+    isPhotoExistInDataBase(urlImagesPreview[urlImagesPreview.length - 1]);
+    selectedImage = urlImagesPreview.slice(0, -1);
     urlImagesPreview = urlImagesPreview.slice(0, -1);
     fileImages = fileImages.slice(0, -1);
-    selectedImage = null;
   }
 
   function triggerImageUpload() {
@@ -36,29 +78,11 @@
     }
   }
 
-  // const handleSubmitImages = async (
-  //   refProductId,
-  //   refProductColection,
-  //   fieldReference
-  // ) => {
-  //   try {
-  //     const formData = new FormData();
-  //     fileImages.forEach((image) => {
-  //       formData.append(`files`, image, image.name);
-  //     });
-  //     formData.append("refId", "2" /* refProductId */);
-  //     formData.append("ref", "api::product.product" /* refProductColection */);
-  //     formData.append("field", "productPhoto" /* fieldReference */);
-
-  //     const response = await httpFormDataRequest("/upload", "POST", formData);
-  //     console.log("responseImage :>> ", response);
-  //     console.log("formData :>> ", formData.values);
-  //   } catch (error) {
-  //     console.log("Error al cargar imagenes :>> ", error);
-  //   }
-  // };
 </script>
 
+{#if isLoading}
+  <Loanding />
+{/if}
 <input
   type="file"
   id="imageUpload"
@@ -105,7 +129,7 @@
             : "Llego al maximo de imagenes"}
         >
           <img
-            src={selectedImage || urlImagesPreview[urlImagesPreview.length - 1]}
+            src={selectedImage || urlImagesPreview[urlImagesPreview[0]]}
             alt="preview de la imagen"
             class="w-80 hover:opacity-60"
           />

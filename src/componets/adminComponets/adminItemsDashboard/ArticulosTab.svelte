@@ -60,6 +60,11 @@
     isModalEditProdutOpen = true;
     selectedEditArticule = productId;
   };
+
+  const productEdited = () => {
+    isModalEditProdutOpen = false;
+    getProducts();
+  };
 </script>
 
 <!-- modal crear nuevo producto -->
@@ -89,10 +94,7 @@
       (isModalEditProdutOpen = false), (selectedEditArticule = null);
     }}
   >
-    <EditArticule
-      {selectedEditArticule}
-      on:editProductResponse={productModificated}
-    />
+    <EditArticule on:productEdited={productEdited} {selectedEditArticule} />
   </Modal>
 {/if}
 

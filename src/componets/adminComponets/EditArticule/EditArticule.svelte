@@ -11,12 +11,16 @@
   import { errorMsg } from "../../constants/defaultMessages";
   import FormErrorMsg from "../../formErrorMsg/FormErrorMsg.svelte";
   import { initialValues, validationSchema } from "./editArticulesConstants";
+  import { notifications } from "../../alertsUser/alert";
+  import ImagenPreview from "../../imagenPreview/ImagenPreview.svelte";
+  import { httpFormDataRequest } from "../../../helpers/httpRequest";
 
   const dispatch = createEventDispatcher();
   export let selectedEditArticule;
   let isLoading = false;
+  let fileImages = [];
   let available = true,
-    selectedTags = [],
+    selectedTagsCategory = [],
     // aca voy guardando el id de las categorias para enviar al back
     selectedCategoriesIds = [],
     // array de ids para enviar al bakend
@@ -32,9 +36,9 @@
       categoriesOptions = await getCategories();
 
       $form.productName = productData.data.attributes.productName;
-      selectedTags = productData.data.attributes.categories.data;
+      selectedTagsCategory = productData.data.attributes.categories.data;
       selectedCategoriesIds = [
-        ...selectedTags.map((category) => ({ id: category.id })),
+        ...selectedTagsCategory.map((category) => ({ id: category.id })),
       ];
 
       $form.imgesProduct = productData.data.attributes.imgesProduct;
@@ -45,14 +49,14 @@
       $form.wholesalePrice = productData.data.attributes.wholesalePrice;
       $form.stock = productData.data.attributes.stock;
     } catch (error) {
-      console.log("error :>> ", error);
+      console.error("error :>> ", error);
     }
     isLoading = false;
   });
 
   const addCategoryTag = () => {
-    if (!!!selectedTags.find(({ id }) => id === selectedItem.id)) {
-      selectedTags = [...selectedTags, selectedItem];
+    if (!!!selectedTagsCategory.find(({ id }) => id === selectedItem.id)) {
+      selectedTagsCategory = [...selectedTagsCategory, selectedItem];
       selectedCategoriesIds = [
         ...selectedCategoriesIds,
         { id: selectedItem.id },
@@ -63,9 +67,11 @@
   };
 
   const deleteCategoryTag = (tag) => {
-    const result = selectedTags.find(({ id }) => id === tag.id);
+    const result = selectedTagsCategory.find(({ id }) => id === tag.id);
     if (result) {
-      selectedTags = selectedTags.filter(({ id }) => id !== tag.id);
+      selectedTagsCategory = selectedTagsCategory.filter(
+        ({ id }) => id !== tag.id
+      );
       selectedCategoriesIds = selectedCategoriesIds.filter(
         ({ id }) => id !== tag.id
       );
@@ -73,69 +79,81 @@
     } else return;
   };
 
-  // categories: selectedTags,
-
   const { form, errors, handleChange, handleSubmit } = createForm({
-    initialValues: { ...initialValues, categories: selectedTags },
+    initialValues: { ...initialValues, categories: selectedTagsCategory },
     validationSchema,
     onSubmit: async (productValuesToEdit) => {
       handleSubmitEditProduct(productValuesToEdit);
     },
   });
 
-  const handleSubmitEditProduct = async (productValuesToEdit) => {
-    const response = await editProduct(
-      productValuesToEdit,
-      selectedEditArticule
-    );
-    if (response.status === 200) {
-      dispatch("editProductResponse", {
-        status: response.status,
-        statusText: response.statusText,
-        msg: "Producto Editado",
-        alertType: "success",
+  const handleSubmitImages = async (
+    refProductId,
+    refProductColection,
+    fieldReference
+  ) => {
+    isLoading = true;
+    notifications.info("Subiendo imagenes...");
+    try {
+      const formData = new FormData();
+      fileImages.forEach((image) => {
+        formData.append(`files`, image, image.name);
       });
-    }
+      formData.append("refId", `${refProductId}`);
+      formData.append("ref", refProductColection);
+      formData.append("field", fieldReference);
 
-    if (response.status != 200) {
-      dispatch("editProductResponse", {
-        status: response.status,
-        statusText: response.statusText,
-        msg: "Producto Editado",
-        alertType: "success",
-      });
+      await httpFormDataRequest("/upload", "POST", formData);
+      notifications.success("Imagenes actualizadas", 3000);
+    } catch (error) {
+      notifications.error("Error al actualizar imagenes", 3000);
+      console.log("Error al cargar imagenes :>> ", error);
     }
+  };
+
+  const handleSubmitEditProduct = async (productValuesToEdit) => {
+    isLoading = true;
+    try {
+      const { status, statusText, data } = await editProduct(
+        productValuesToEdit,
+        selectedEditArticule
+      );
+      notifications.success("¡ Detalle de producto actualizado! ");
+      if (
+        statusText === "OK" &&
+        status === 200 &&
+        data.data.id &&
+        fileImages.length > 0
+      ) {
+        await handleSubmitImages(
+          data.data.id,
+          "api::product.product",
+          "productPhoto"
+        );
+      }
+    } catch (error) {
+      notifications.error("Error al editar producto");
+      console.error("Error al editar porducto :>> ", error);
+    }
+    dispatch("productEdited");
+    isLoading = false;
+  };
+
+  const handlefileImages = (e) => {
+    fileImages = e.detail;
   };
 </script>
 
-<main class="min-h-16">
-  {#if isLoading}
-    <Loanding />
-  {/if}
+{#if isLoading}
+  <Loanding />
+{/if}
+<main class="w-full">
   {#if productData.data}
+    <ImagenPreview
+      on:fileImages={handlefileImages}
+      productPhotos={productData.data?.attributes?.productPhoto.data}
+    />
     <form on:submit={handleSubmit}>
-      <!-- <section class="flex flex-col items-center">
-        <div>
-          <span class="text-primary"
-            >{`Fotos · ${$form.imgesProduct.length}/5 - Puedes agregar un máximo de 5 fotos.`}</span
-          >
-        </div>
-        <div>
-          <button type="button">
-            <div class="card-add-images">
-              <input
-                type="file"
-                multiple
-                name="imgesProduct"
-                on:change={handleChange}
-                bind:value={$form.imgesProduct}
-              />
-              cargar archivos
-            </div>
-          </button>
-          <FormErrorMsg error={$errors.imgesProduct} />
-        </div>
-      </section> -->
       <section class="my-3">
         <div>
           <label class="label" for="articuleName">
@@ -232,7 +250,6 @@
           />
           <FormErrorMsg error={$errors.productDescription} />
         </div>
-        <!-- #################################################################### -->
         <div class="columns-2 flex flex-col">
           <div>
             <label
@@ -258,10 +275,12 @@
             />
           </div>
           <div class="mt-3">
-            {#each selectedTags as tag}
+            {#each selectedTagsCategory as tagCategory}
               <div class="badge badge-ghost gap-2 m-1">
-                {tag.attributes.name}
-                <button on:click={() => deleteCategoryTag(tag)}>x</button>
+                {tagCategory.attributes.name}
+                <button on:click={() => deleteCategoryTag(tagCategory)}
+                  >x</button
+                >
               </div>
             {/each}
           </div>
@@ -285,7 +304,7 @@
       <div class="divider m-0 p-0" />
       <div class="flex justify-end">
         <button class="btn btn-primary ml-3" type="submit"
-          >Crear producto</button
+          >Editar producto</button
         >
       </div>
     </form>
