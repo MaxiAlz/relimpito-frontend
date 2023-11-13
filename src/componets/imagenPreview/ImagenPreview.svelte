@@ -8,21 +8,21 @@
    * @argument refProductColection coleccion del producto (se encuentra en el controlador de la coleccion) ex=> api::product.product
    * @argument fieldReference nombre del campo de las imagenes en el esquema del producto ex=> productPhotos
    *
+   * @argument productPhotos Array de url de imagenes
    */
 
   const dispatch = createEventDispatcher();
 
   export let productPhotos;
 
+  export let limitImages = 2; //limite de imagenes para cargar
   let urlImagesPreview = []; //url local de las imagens a medida que se van subiendo
   let fileImages = []; //aray de tipo file por cada imagen que se sube
   let selectedImage = null; //imagen seleccionada en el preview
-  let limitImages = 2; //limite de imagenes para cargar
   let isLoading = false;
 
-  $: console.log("productPhotos :>> ", productPhotos);
+  let currentIndex = 0;
 
-  
   if (productPhotos) {
     urlImagesPreview = productPhotos.map((product) => product.attributes.url);
     selectedImage = urlImagesPreview[0];
@@ -78,6 +78,15 @@
     }
   }
 
+  const nextPhotoPreview = () => {
+    currentIndex = (currentIndex + 1) % urlImagesPreview.length;
+    selectedImage = urlImagesPreview[currentIndex];
+  };
+
+  const beforeProtoPreview = () => {
+    currentIndex = (currentIndex - 1) % urlImagesPreview.length;
+    selectedImage = urlImagesPreview[currentIndex];
+  };
 </script>
 
 {#if isLoading}
@@ -90,7 +99,8 @@
   on:change={handleImageUpload}
   class="hidden"
 />
-<articule class="p-2 imagen-preview m-2">
+<articule class="p-2 imagen-preview m-2 w-96 h-96">
+  <!-- Limite de imagenes para cargar -->
   <div class="text-center mb-2 p-0">
     <span class="text-primary text-center"
       >Imagenes seleccionadas <strong
@@ -98,6 +108,7 @@
       ></span
     >
   </div>
+  <!-- imagen por defecto su no se cargo nada -->
   <section class="flex justify-center items-center">
     {#if !urlImagesPreview.length}
       <label
@@ -115,8 +126,20 @@
       </label>
     {/if}
   </section>
+  <!-- si se cargan las imagenes se van previsualizando -->
   {#if urlImagesPreview.length > 0}
     <section class="flex justify-center items-center imagenPreview">
+      <div>
+        <button
+          class="hover:shadow p-2 btn m-2"
+          on:click={beforeProtoPreview}
+          disabled={currentIndex === 0}
+          ><span class="material-symbols-outlined">
+            arrow_back_ios
+          </span></button
+        >
+      </div>
+
       <button
         disabled={!(urlImagesPreview.length <= limitImages - 1)}
         on:click={() => triggerImageUpload()}
@@ -131,10 +154,20 @@
           <img
             src={selectedImage || urlImagesPreview[urlImagesPreview[0]]}
             alt="preview de la imagen"
-            class="w-80 hover:opacity-60"
+            class=" h-80 hover:opacity-60"
           />
         </div>
       </button>
+      <div>
+        <button
+          class="hover:shadow p-2 btn m-2"
+          disabled={currentIndex === urlImagesPreview.length - 1}
+          on:click={nextPhotoPreview}
+          ><span class="material-symbols-outlined">
+            arrow_forward_ios
+          </span></button
+        >
+      </div>
     </section>
     <section>
       <div class="flex justify-center items-center">

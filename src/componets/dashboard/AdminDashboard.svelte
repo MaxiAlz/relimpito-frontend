@@ -1,4 +1,4 @@
-<script>
+<!-- <script>
   import { onMount } from "svelte";
   import { dashboardItems } from "../adminComponets/adminItemsDashboard/dashboardItemsRender";
   import { navigate } from "svelte-routing";
@@ -49,4 +49,4 @@
   .heightDashboard {
     height: 91.9vh;
   }
-</style>
+</style> -->
