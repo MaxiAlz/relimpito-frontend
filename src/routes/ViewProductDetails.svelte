@@ -3,7 +3,6 @@
   import { httpRequest } from "../helpers/httpRequest";
   import { notifications } from "../componets/alertsUser/alert";
   import CarrouselProductImage from "../componets/imagenPreview/CarrouselProductImage.svelte";
-  import Loanding from "../componets/loader/Loanding.svelte";
 
   export let routerParams;
   let productData;
@@ -32,11 +31,29 @@
     }
   };
 
+  // categories?populate=products&filters[name][$eqi]=plasticos
+
+  // const getArticulesByCategory = async () => {
+  //   try {
+  //     const { data, status } = await httpRequest(
+  //       `/products?filters[categories][$eq]="categoriaTest`,
+  //       "GET"
+  //     );
+  //     console.log("rs[id][$in][31] :>> ", data);
+  //   } catch (error) {}
+  // };
+  // getArticulesByCategory();
+
+  /**
+   * /api/restaurants?filters[categories][$eq]="categoriaTest"
+   *
+   */
+
+  // $: console.log("productData :>> ", productData);
+
   const setIndex = (e) => {
     indexPhoto = e.detail.currentIndex + 1;
   };
-
-  $: console.log("indexPhoto :>> ", indexPhoto);
 </script>
 
 {#if isloading && productData}
@@ -52,14 +69,15 @@
   </div>
 {/if}
 {#if !isloading}
-  <div class="card lg:card-side bg-base-100 shadow-xl mt-2">
+  <div class="card lg:card-side bg-base-100 shadow-2xl sm:w-full p-5">
     {#if imagesUrl.length > 0}
       <CarrouselProductImage {imagesUrl} on:currentIndex={setIndex} />
     {/if}
     <!-- <span class="text-primary font-semibold ml-5 flex">
         {indexPhoto} / {imagesUrl.length}
       </span> -->
-    <article class="card-body w-96">
+
+    <article class="card-body w-96 sm:w-full">
       <div class="flex justify-between items-center">
         <h2 class="card-title uppercase">
           {productData?.attributes?.productName}
@@ -88,7 +106,7 @@
       <span class="label-text text-sm opacity-70"
         >CODIGO: {productData?.attributes?.productCode}</span
       >
-      {#if productData?.attributes?.categories?.data > 0}
+      {#if productData?.attributes?.categories?.data.length > 0}
         <span class="text-primary font-semibold mt-2">Categorias:</span>
         <div class="card-actions justify-start">
           {#each productData?.attributes?.categories?.data as category}
@@ -97,14 +115,23 @@
         </div>
       {/if}
       <div class="divider m-0 p-0" />
-      <span class="text-primary font-semibold">Descripcion:</span>
-      <p>{productData?.attributes?.productDescription}</p>
-      <div class="card-actions justify-end">
-        <button class="btn btn-primary btn-outline"
-          ><span class="material-symbols-outlined"> shopping_cart </span>Agregar
-          al Carrito</button
-        >
-        <button class="btn btn-primary">Comprar</button>
+      <div
+        class=" flex md:flex-col max-sm:flex-col-reverse sm:flex-col-reverse sm:w-full max-sm:w-full"
+      >
+        <div class="flex flex-col">
+          <span class="text-primary font-semibold">Descripcion:</span>
+          <p class="pr-10 mt-2">
+            {productData?.attributes?.productDescription}
+          </p>
+        </div>
+        <div class="card-actions my-5 md:justify-end">
+          <button class="btn btn-primary btn-outline max-sm:w-full"
+            ><span class="material-symbols-outlined">
+              shopping_cart
+            </span>Agregar al Carrito</button
+          >
+          <button class="btn btn-primary max-sm:w-full">Comprar</button>
+        </div>
       </div>
     </article>
   </div>

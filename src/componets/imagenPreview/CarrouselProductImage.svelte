@@ -55,8 +55,25 @@
 </div>
 
 <style>
-  .previewImages {
-    width: 35rem;
-    height: 35rem;
+  @media screen and (min-width: 1024px) {
+    .previewImages {
+      max-width: 40rem;
+      max-height: 40rem;
+      display: flex;
+    }
+  }
+  @media screen and (max-width: 640px) {
+    .previewImages {
+      max-width: 40rem;
+      max-height: 40rem;
+      display: flex;
+    }
+  }
+  @media screen and (max-width: 320px) {
+    .previewImages {
+      max-width: 35rem;
+      max-height: 35rem;
+      display: flex;
+    }
   }
 </style>
