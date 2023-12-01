@@ -2,8 +2,8 @@
   import { onMount } from "svelte";
   import { navigate } from "svelte-routing";
   import { httpRequest } from "../helpers/httpRequest";
-  import Loanding from "../componets/loader/Loanding.svelte";
   import CardProduct from "../componets/viewProducts/CardProduct.svelte";
+  import CarrouselHome from "../componets/imagenPreview/CarrouselHome.svelte";
 
   let products = [];
   let paginationParams;
@@ -14,12 +14,10 @@
     getArticules();
   });
 
-
   const getArticules = async () => {
     isloading = true;
     try {
       const { data } = await httpRequest("/products?populate=*", "GET");
-
       paginationParams = data?.meta?.pagination;
       products = data?.data;
     } catch (error) {
@@ -29,18 +27,19 @@
   };
 
   const viewProduct = (productId, uidProduct) => {
-    console.log("ver producto id: :>> ", productId, uidProduct);
-
     navigate(`/Articulos/Ver-Producto/${productId}`);
   };
 </script>
 
-{#if isloading}
-  <Loanding />
-{/if}
-
-<h1>lista de Articulos</h1>
+<CarrouselHome />
+<h1 class="text-primary font-semibold text-2xl text-center uppercase">
+  lista de Articulos
+</h1>
+<!-- Card de Articulos -->
 <section class="flex items-center justify-center flex-wrap">
+  {#if isloading}
+    <span class="loading loading-spinner loading-lg text-primary" />
+  {/if}
   {#each products as product (product.id)}
     <button on:click={() => viewProduct(product.id, product.uidProduct)}>
       <CardProduct dataProduct={product} />
