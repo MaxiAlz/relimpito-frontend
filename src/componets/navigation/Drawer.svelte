@@ -4,9 +4,9 @@
   import BudgeteShoppingCard from "../shoppingCart/BudgeteShoppingCard.svelte";
 
   let user = {
-    name: "Relimpito",
-    userName: "RelimpitoAdmin",
-    role: "Admin",
+    // name: "Relimpito",
+    // userName: "RelimpitoAdmin",
+    // role: "Admin",
   };
 </script>
 
@@ -34,7 +34,9 @@
         </label>
       </div>
 
-      <div class="flex-1 px-2 mx-2 text-secondary font-semibold">NAVBAR TITLE</div>
+      <div class="flex-1 px-2 mx-2 text-secondary font-semibold">
+        NAVBAR TITLE
+      </div>
 
       <!-- OPCIONES USUARIO LOGEADO -->
       {#if user.name}
@@ -53,19 +55,29 @@
           <UserProfileOptions userData={user} />
         </div>
       {/if}
+
       <!-- USUARIO NO LOGEADO -->
       {#if !user.name}
         <div class="flex-none hidden lg:block font-normal text-white">
           <ul class="menu menu-horizontal">
             <!-- Navbar menu content here -->
-            <li><a href="asd">ARTICULOS</a></li>
+            <Link to="/Articulos"
+              ><button class="btn btn-ghost btn-sm"> Articulos </button></Link
+            >
+            <Link to="/Contacto"
+              ><button class="btn btn-ghost btn-sm"> Contacto </button></Link
+            >
+            <Link to="/Nosotros"
+              ><button class="btn btn-ghost btn-sm"> Nosotros </button></Link
+            >
+            <!-- <li><a href="asd">ARTICULOS</a></li>
             <li><a href="asd">CATEGORIAS</a></li>
             <li><Link to="/Nosotros">NOSOTROS</Link></li>
-            <li><Link to="/Contacto">CONTACTANOS</Link></li>
+            <li><Link to="/Contacto">CONTACTANOS</Link></li> -->
             <Link to="/Login">
               <button class="btn btn-secondary btn-sm ml-2"
                 ><span class="material-symbols-outlined"> person </span>
-                Mi cuenta
+                Ingresar
               </button></Link
             >
             <!-- <button class="btn btn-outline btn-secondary btn-sm ml-2"
@@ -77,7 +89,6 @@
     </div>
 
     <!-- Page content here -->
-
   </div>
   <div class="drawer-side">
     <label for="my-drawer-3" class="drawer-overlay" />

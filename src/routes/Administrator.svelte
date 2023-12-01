@@ -7,7 +7,6 @@
   export let paramsRouter;
 
   let selectedItem = {};
-  $: console.log("paramsRouter :>> ", paramsRouter);
 
   onMount(() => {
     selectedItem = dashboardItems[0];
