@@ -2,15 +2,34 @@
   import * as yup from "yup";
   import { createForm } from "svelte-forms-lib";
   import FormErrorMsg from "../formErrorMsg/FormErrorMsg.svelte";
+  import { httpRequest } from "../../helpers/httpRequest";
+  import { notifications } from "../alertsUser/alert";
+  import { navigate } from "svelte-routing";
+  import { errorMsg } from "../constants/defaultMessages";
 
   let showPassword = false;
   let secondPassword = "";
   $: passwordNotMatchText = "";
-  const defaultMsg = "Este campo es obligatorio";
+  let isLoading = false;
 
-  function handleSubmitLogin(userValues) {
-    console.log("Registrando usuario:", userValues);
-  }
+  const handleSubmiRegisterUser = async (userValues) => {
+    isLoading = true;
+    console.log("userValues :>> ", userValues);
+    try {
+      const reponseRegister = await httpRequest(
+        "/auth/local/register",
+        "POST",
+        userValues
+      );
+      console.log("reponseRegister :>> ", reponseRegister);
+      notifications.success("Usuario creado", 5000);
+      navigate("Login");
+    } catch (error) {
+      console.error("Error al registrar usuario: :>> ", error);
+      notifications.error("Error al crear suario", 5000);
+    }
+    isLoading = false;
+  };
 
   const { form, errors, handleChange, handleSubmit } = createForm({
     initialValues: {
@@ -19,24 +38,21 @@
       password: "",
     },
     validationSchema: yup.object().shape({
-      username: yup.string().required(defaultMsg),
-      email: yup.string().email().required(defaultMsg),
-      password: yup.string().required(defaultMsg),
-      // secondPassword: yup.string().required(defaultMsg),
+      username: yup.string().required(errorMsg),
+      email: yup.string().email().required(errorMsg),
+      password: yup.string().required(errorMsg),
+      // secondPassword: yup.string().required(errorMsg),
     }),
     onSubmit: (userValues) => {
-      handleSubmitLogin(userValues);
+      handleSubmiRegisterUser(userValues);
     },
   });
 
   const isPAsswordMatched = (repitPassword) => {
-    if (repitPassword !== $form.password) {
-      console.log("no hay match :>> ");
-      passwordNotMatchText = "Las contraselas no son iguales";
-    }
-    if (repitPassword === $form.password) {
-      console.log("todo okey");
+    if (repitPassword.target.value === $form.password) {
       passwordNotMatchText = "";
+    } else {
+      passwordNotMatchText = "Las contraselas no son iguales";
     }
   };
 </script>
@@ -81,7 +97,7 @@
       <label class="label-text my-1 text-neutral" for="password"
         >Contraseña:</label
       >
-      <button on:click={() => (showPassword = !showPassword)}>
+      <button on:click|preventDefault={() => (showPassword = !showPassword)}>
         <span class="material-symbols-outlined">
           {showPassword ? "visibility" : "visibility_off"}
         </span>
@@ -144,9 +160,14 @@
 
     <FormErrorMsg error={passwordNotMatchText} />
 
-    <button class="btn btn-primary mt-5 w-full" type="submit"
-      >Registrarse</button
-    >
+    <button class="btn btn-primary mt-5 w-full" type="submit">
+      {#if isLoading}
+        <span class="loading loading-spinner loading-md"></span>
+      {/if}
+      {#if !isLoading}
+        <span>Registrarse</span>
+      {/if}
+    </button>
   </div>
 </form>
 
