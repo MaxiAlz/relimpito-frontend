@@ -9,8 +9,12 @@
   import AlertToast from "./componets/alertsUser/AlertToast.svelte";
   import ViewProductDetails from "./routes/ViewProductDetails.svelte";
   import LoginAndRegisteForm from "./routes/LoginAndRegisteForm.svelte";
+  import { userDataRelimpito } from "./stores/sesionManager";
 
   export let urlRouting = "";
+  let pathUrl = window.location.pathname;
+
+  console.log("userdata :>> ", $userDataRelimpito);
 </script>
 
 <AlertToast />
@@ -18,7 +22,7 @@
   <Router url={urlRouting}>
     <!-- este seria el navbar -->
     <!-- <Dashboard /> -->
-    {#if window.location.pathname != "/Login"}
+    {#if pathUrl != "/Login"}
       <Drawer />
     {/if}
     <Route path="/Login" component={LoginAndRegisteForm} />

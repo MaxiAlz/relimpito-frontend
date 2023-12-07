@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { getStorageTokenUser } from '../stores/sesionManager';
 
 /**
 * @param {String} url - URL del servicio que se quiere consumir.
@@ -7,16 +8,18 @@ import axios from 'axios';
  * 
  */
 
+let $token = getStorageTokenUser()
+
 // Función genérica para realizar peticiones HTTP
 async function httpRequest(url, method, data = null) {
-
+  $token = getStorageTokenUser()
   try {
     const response = await axios({
       url: `http://${import.meta.env.VITE_API_BASE_URL}${url}`,
       method,
       data,
       headers: {
-        // Authorization: `Bearer ${$token}`,
+        Authorization: `Bearer ${$token}`,
         "Content-Type": "application/json",
       }
     });
@@ -37,13 +40,14 @@ async function httpRequest(url, method, data = null) {
 }
 
 const httpFormDataRequest = async (url, method, formData)=>{
+  $token = getStorageTokenUser()
 try {
     const response = await axios({
       url: `http://${import.meta.env.VITE_API_BASE_URL}${url}`,
       method,
       data: formData,
       headers: {
-        // Authorization: `Bearer ${$token}`,
+        Authorization: `Bearer ${$token}`,
         "Content-Type": "multipart/form-data",
         
       }

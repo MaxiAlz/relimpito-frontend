@@ -4,6 +4,8 @@
   import RegisterForm from "../componets/userSession/RegisterForm.svelte";
 
   let isRegistering = false;
+
+  //TODO: ver que onda el videito este: https://www.youtube.com/watch?v=MDcLtyFGwjM&t=1377s
 </script>
 
 <main class="flex items-center justify-center heighMain bg-slate-100">

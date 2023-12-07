@@ -2,12 +2,7 @@
   import { Link } from "svelte-routing";
   import UserProfileOptions from "./UserProfileOptions.svelte";
   import BudgeteShoppingCard from "../shoppingCart/BudgeteShoppingCard.svelte";
-
-  let user = {
-    // name: "Relimpito",
-    // userName: "RelimpitoAdmin",
-    // role: "Admin",
-  };
+  import { userDataRelimpito } from "../../stores/sesionManager";
 </script>
 
 <div class="drawer">
@@ -39,7 +34,7 @@
       </div>
 
       <!-- OPCIONES USUARIO LOGEADO -->
-      {#if user.name}
+      {#if $userDataRelimpito?.name}
         <div>
           <div class="dropdown dropdown-end">
             <BudgeteShoppingCard />
@@ -52,12 +47,12 @@
               <span class="badge badge-xs badge-secondary indicator-item" />
             </div>
           </button>
-          <UserProfileOptions userData={user} />
+          <UserProfileOptions />
         </div>
       {/if}
 
       <!-- USUARIO NO LOGEADO -->
-      {#if !user.name}
+      {#if !$userDataRelimpito?.name}
         <div class="flex-none hidden lg:block font-normal text-white">
           <ul class="menu menu-horizontal">
             <!-- Navbar menu content here -->
@@ -70,19 +65,13 @@
             <Link to="/Nosotros"
               ><button class="btn btn-ghost btn-sm"> Nosotros </button></Link
             >
-            <!-- <li><a href="asd">ARTICULOS</a></li>
-            <li><a href="asd">CATEGORIAS</a></li>
-            <li><Link to="/Nosotros">NOSOTROS</Link></li>
-            <li><Link to="/Contacto">CONTACTANOS</Link></li> -->
+
             <Link to="/Login">
               <button class="btn btn-secondary btn-sm ml-2"
                 ><span class="material-symbols-outlined"> person </span>
                 Ingresar
               </button></Link
             >
-            <!-- <button class="btn btn-outline btn-secondary btn-sm ml-2"
-              >Login</button
-            > -->
           </ul>
         </div>
       {/if}

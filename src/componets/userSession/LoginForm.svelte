@@ -6,6 +6,7 @@
   import { createForm } from "svelte-forms-lib";
   import { errorMsg } from "../constants/defaultMessages";
   import FormErrorMsg from "../formErrorMsg/FormErrorMsg.svelte";
+  import { loginStoreUser, storeUserToken } from "../../stores/sesionManager";
 
   let isLoading = false;
 
@@ -18,10 +19,11 @@
         "POST",
         userValues
       );
+      console.log("objedatact :>> ", data);
       if (status == 200) {
-        localStorage.setItem("userTokenRelimpito", data.jwt);
+        storeUserToken(data.jwt);
+        loginStoreUser(data.user);
       }
-      console.log("reponseRegister :>> ", data);
       notifications.success("¡bienvenido!", 5000);
       // navigate("/");
     } catch (error) {

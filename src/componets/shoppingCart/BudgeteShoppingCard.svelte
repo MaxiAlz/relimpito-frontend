@@ -1,4 +1,4 @@
-<label tabindex="0" form="carrito-de-compra" class="btn btn-ghost btn-circle">
+<label tabindex="0" form="carrito-de-compra" class="btn btn-ghost btn-circle" for="asd">
   <div class="indicator">
     <span class="material-symbols-outlined icon-color"> shopping_cart </span>
     <span class="badge badge-secondary badge-sm indicator-item">8</span>
