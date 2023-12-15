@@ -1,5 +1,6 @@
 <script>
   import { Link } from "svelte-routing";
+  import logoVerticalRelimpito from "../../assets/Logo-Relimpito-BLANCO.png";
   import UserProfileOptions from "./UserProfileOptions.svelte";
   import BudgeteShoppingCard from "../shoppingCart/BudgeteShoppingCard.svelte";
   import { userDataRelimpito } from "../../stores/sesionManager";
@@ -30,7 +31,11 @@
       </div>
 
       <div class="flex-1 px-2 mx-2 text-secondary font-semibold">
-        NAVBAR TITLE
+        <img
+          src={logoVerticalRelimpito}
+          alt={logoVerticalRelimpito}
+          width="200"
+        />
       </div>
 
       <!-- OPCIONES USUARIO LOGEADO -->
