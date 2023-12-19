@@ -11,6 +11,7 @@
   import LoginAndRegisteForm from "./routes/LoginAndRegisteForm.svelte";
   import { userDataRelimpito } from "./stores/sesionManager";
   import ArticulosTab from "./componets/adminComponets/adminItemsDashboard/ArticulosTab.svelte";
+  import Footer from "./componets/landingPage/Footer.svelte";
 
   export let urlRouting = "";
   let pathUrl = window.location.pathname;
@@ -43,6 +44,7 @@
       <EditArticule paramsRouter={params} />
     </Route> -->
     <Route path="*" component={ErrorPage} />
+    <Footer />
   </Router>
 </main>
 

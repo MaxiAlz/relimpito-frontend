@@ -76,7 +76,7 @@
     >
     <span class="text-primary font-bold uppercase">Proveemos recursos </span>
     <p class="m-2">
-      Mantenemos el stock de producto actualizado durante todo el año para tu
+      Mantenemos el stock de productos actualizado durante todo el año para tu
       empresa, negocio y oficina.
     </p>
   </div>
@@ -124,8 +124,8 @@
     >
     <span class="text-primary font-bold uppercase">Atencion online</span>
     <p class="m-2">
-      Realia tu pedido de manera online, envia el detalle, espera confirmacion
-      del pago y recibilo en tu domicilio.
+      Realiza tu compra de manera online, envia el detalle, espera la
+      confirmacion del pago y recibilo en tu domicilio.
     </p>
   </div>
   <div class="divider divider-horizontal"></div>
