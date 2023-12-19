@@ -10,6 +10,7 @@
   import ViewProductDetails from "./routes/ViewProductDetails.svelte";
   import LoginAndRegisteForm from "./routes/LoginAndRegisteForm.svelte";
   import { userDataRelimpito } from "./stores/sesionManager";
+  import ArticulosTab from "./componets/adminComponets/adminItemsDashboard/ArticulosTab.svelte";
 
   export let urlRouting = "";
   let pathUrl = window.location.pathname;
@@ -25,14 +26,14 @@
     {#if pathUrl != "/Login"}
       <Drawer />
     {/if}
-    <Route path="/Login" component={LoginAndRegisteForm} />
     <Route path="/" component={Home} />
-    <Route path="/Articulos" component={Home} />
+    <Route path="/Login" component={LoginAndRegisteForm} />
 
     <Route path="/Articulos/Ver-Producto/:idProduct" let:params>
       <ViewProductDetails routerParams={params} />
     </Route>
-
+    <!-- admin routes -->
+    <Route path="/admin/Articulos" component={ArticulosTab} />
     <Route path="/admin" component={Administrator} />
     <Route path="/admin/:section/" let:params>
       <Administrator paramsRouter={params} />

@@ -1,0 +1,53 @@
+<script>
+  import { onMount } from "svelte";
+  import { navigate } from "svelte-routing";
+  import { httpRequest } from "../../helpers/httpRequest";
+  import CardProduct from "../viewProducts/CardProduct.svelte";
+
+  let products = [];
+  let isloading = false;
+
+  onMount(() => {
+    getArticules();
+  });
+
+  const getArticules = async () => {
+    isloading = true;
+    try {
+      const { data } = await httpRequest(
+        "/products?populate=*&pagination[pageSize]=12",
+        "GET"
+      );
+
+      products = data?.data;
+    } catch (error) {
+      console.log("error :>> ", error);
+    }
+    isloading = false;
+  };
+
+  const viewProduct = (productId) => {
+    navigate(`/Articulos/Ver-Producto/${productId}`);
+  };
+</script>
+
+<h1 class="text-primary font-semibold text-2xl text-center uppercase m-10">
+  lista de Articulos
+</h1>
+
+<section class="flex items-center justify-center flex-wrap">
+  {#if isloading}
+    <span class="loading loading-spinner loading-lg text-primary" />
+  {/if}
+  {#each products as product (product.id)}
+    <button on:click={() => viewProduct(product.id)}>
+      <CardProduct dataProduct={product} />
+    </button>
+  {/each}
+  <div class="flex items-center justify-center w-full m-5">
+    <button
+      class="btn btn-secondary"
+      on:click={() => navigate("/ver-Articulos")}>Ver mas productos</button
+    >
+  </div>
+</section>
