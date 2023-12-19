@@ -71,12 +71,12 @@
               ><button class="btn btn-ghost btn-sm"> Nosotros </button></Link
             >
 
-            <Link to="/Login">
+            <!-- <Link to="/Login">
               <button class="btn btn-secondary btn-sm ml-2"
                 ><span class="material-symbols-outlined"> person </span>
                 Ingresar
               </button></Link
-            >
+            > -->
           </ul>
         </div>
       {/if}
