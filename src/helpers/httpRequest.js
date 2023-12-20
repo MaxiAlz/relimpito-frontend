@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { getStorageTokenUser } from '../stores/sesionManager';
+import { notifications } from '../componets/alertsUser/alert';
 
 /**
 * @param {String} url - URL del servicio que se quiere consumir.
@@ -10,29 +11,38 @@ import { getStorageTokenUser } from '../stores/sesionManager';
 
 let $token = getStorageTokenUser()
 
+$:console.log('$token :>> ', $token);
 // Función genérica para realizar peticiones HTTP
 async function httpRequest(url, method, data = null) {
   $token = getStorageTokenUser()
   try {
+    const headers = {
+      "Content-Type": "application/json",
+    };
+    
+    if ($token) {
+      headers.Authorization = `Bearer ${$token}`;
+    }
+
     const response = await axios({
       url: `http://${import.meta.env.VITE_API_BASE_URL}${url}`,
       method,
       data,
-      headers: {
-        Authorization: `Bearer ${$token}`,
-        "Content-Type": "application/json",
-      }
+      headers,
     });
     return response
 
   } catch (error) {
-    if (error.response.status == 401) {
-      alert("Error de autenticacion")
+    if (error.response && error.response.status === 401) {
+      notifications.error("Error de autenticación")
+      // alert("Error de autenticación");
     }
     // Manejo de errores
     if (error.response) {
+      notifications.error(`Error en la petición: ${error.response.status} - ${error.response.statusText}`)
       throw new Error(`Error en la petición: ${error.response.status} - ${error.response.statusText}`);
     } else if (error.request) {
+      notifications.error('No se pudo obtener respuesta del servidor')
       throw new Error('No se pudo obtener respuesta del servidor');
     }
 
