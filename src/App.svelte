@@ -3,15 +3,17 @@
   import Administrator from "./routes/Administrator.svelte";
   import Home from "./routes/Home.svelte";
   import ErrorPage from "./routes/ErrorPage.svelte";
+  import ViewProductDetails from "./routes/ViewProductDetails.svelte";
+  import LoginAndRegisteForm from "./routes/LoginAndRegisteForm.svelte";
+
   import Drawer from "./componets/navigation/Drawer.svelte";
   import Dashboard from "./componets/dashboard/Dashboard.svelte";
   import AdminDashboard from "./componets/dashboard/AdminDashboard.svelte";
   import AlertToast from "./componets/alertsUser/AlertToast.svelte";
-  import ViewProductDetails from "./routes/ViewProductDetails.svelte";
-  import LoginAndRegisteForm from "./routes/LoginAndRegisteForm.svelte";
-  import { userDataRelimpito } from "./stores/sesionManager";
   import ArticulosTab from "./componets/adminComponets/adminItemsDashboard/ArticulosTab.svelte";
   import Footer from "./componets/landingPage/Footer.svelte";
+  import { userDataRelimpito } from "./stores/sesionManager";
+  import Catalog from "./routes/Catalog.svelte";
 
   export let urlRouting = "";
   let pathUrl = window.location.pathname;
@@ -29,6 +31,7 @@
     {/if}
     <Route path="/" component={Home} />
     <Route path="/Login" component={LoginAndRegisteForm} />
+    <Route path="/Catalogo" component={Catalog} />
 
     <Route path="/Articulos/Ver-Producto/:idProduct" let:params>
       <ViewProductDetails routerParams={params} />
