@@ -67,13 +67,14 @@
 
 <div class="footer footer-center p-4 bg-base-300 text-base-content">
   <aside class="flex flex-col lg:flex-row">
-    <p>Copyright © 2024 - Relimpito SRL</p>
+    <p>Copyright © 2024 - Relimpito SH</p>
     <span class="cosito md">|</span>
     <div class="flex">
       <span class="mr-2">Desarrollado por:</span>
       <a
-        href="https://www.linkedin.com/in/maximiliano-alzugaray-308740212/"
+        href="https://www.instagram.com/aborigenes.digitalfactory/"
         target="_blank"
+        class="link"
       >
         Aborigenes - Digital Factory</a
       >
