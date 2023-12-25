@@ -15,7 +15,9 @@
         Somos una empresa familiar dedicada a la fabricacion y distribucion de
         articulos de limpieza para todo tipo de clientes.
       </h3>
-      <div class="flex justify-center lg:justify-start tracking-in-expand-forward-top">
+      <div
+        class="flex justify-center lg:justify-start tracking-in-expand-forward-top z-0"
+      >
         <img src={isotipoRelimpito} alt="isoogo" class="imgLogoBanner" />
       </div>
     </div>
@@ -68,6 +70,7 @@
   @media only screen and (min-width: 600px) {
     .imgLogoBanner {
       width: 25rem;
+      z-index: 1;
     }
   }
 
@@ -75,6 +78,7 @@
   @media only screen and (max-width: 599px) {
     .imgLogoBanner {
       width: 40rem;
+      z-index: 1;
     }
   }
   .tracking-in-expand {

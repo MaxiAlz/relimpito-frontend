@@ -18,10 +18,11 @@
   export let urlRouting = "";
   let pathUrl = window.location.pathname;
 
-  console.log("userdata :>> ", $userDataRelimpito);
+  console.log("userDataRelimpito :>> ", $userDataRelimpito);
 </script>
 
 <AlertToast />
+<!-- <button on:click={getUserRole}>maveeeeeeeer</button> -->
 <main>
   <Router url={urlRouting}>
     <!-- este seria el navbar -->
@@ -30,24 +31,29 @@
       <Drawer />
     {/if}
     <Route path="/" component={Home} />
+
     <Route path="/Login" component={LoginAndRegisteForm} />
+
     <Route path="/Catalogo" component={Catalog} />
 
     <Route path="/Articulos/Ver-Producto/:idProduct" let:params>
       <ViewProductDetails routerParams={params} />
     </Route>
-    <!-- admin routes -->
-    <Route path="/admin/Articulos" component={ArticulosTab} />
-    <Route path="/admin" component={Administrator} />
-    <Route path="/admin/:section/" let:params>
-      <Administrator paramsRouter={params} />
-      <!-- <AdminDashboard paramsRouter={params} /> -->
-    </Route>
+
+    {#if $userDataRelimpito.role === "admin"}
+      <Route path="/admin" component={Administrator} />
+      <Route path="/admin/Articulos" component={ArticulosTab} />
+      <Route path="/admin/:section/" let:params>
+        <Administrator paramsRouter={params} />
+      </Route>
+    {/if}
     <!-- <Route path="/admin/editar/:articule/" let:params>
       <EditArticule paramsRouter={params} />
     </Route> -->
     <Route path="*" component={ErrorPage} />
-    <Footer />
+    {#if pathUrl != "/Login"}
+      <Footer />
+    {/if}
   </Router>
 </main>
 

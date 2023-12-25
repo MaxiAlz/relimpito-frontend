@@ -6,29 +6,59 @@
   import { createForm } from "svelte-forms-lib";
   import { errorMsg } from "../constants/defaultMessages";
   import FormErrorMsg from "../formErrorMsg/FormErrorMsg.svelte";
-  import { loginStoreUser, storeUserToken } from "../../stores/sesionManager";
+  import {
+    getStorageTokenUser,
+    loginStoreUser,
+    storeUserToken,
+  } from "../../stores/sesionManager";
+  import { onMount } from "svelte";
 
   let isLoading = false;
 
+  onMount(() => isUSerLoged());
+
+  const isUSerLoged = () => {
+    if (getStorageTokenUser()) {
+      alert("usted ya tiene una sesion iniciada");
+      navigate("/");
+    }
+  };
+
   const handleSubmitLoginUser = async (userValues) => {
     isLoading = true;
-    console.log("userValues :>> ", userValues);
     try {
       const { data, status } = await httpRequest(
         "/auth/local",
         "POST",
         userValues
       );
-      console.log("objedatact :>> ", data);
       if (status == 200) {
         storeUserToken(data.jwt);
-        loginStoreUser(data.user);
+        const userData = await getUserData();
+        loginStoreUser(userData);
       }
       notifications.success("¡bienvenido!", 5000);
-      // navigate("/");
+      navigate("/");
     } catch (error) {
       console.error("Error al registrar usuario: :>> ", error);
       notifications.error("Error al ingresar", 5000);
+    }
+    isLoading = false;
+  };
+
+  const getUserData = async () => {
+    isLoading = true;
+    try {
+      const { data } = await httpRequest("/users/me?populate=*", "GET");
+      let userData = {
+        name: data.name,
+        lastName: data.lastName,
+        username: data.username,
+        role: data.role.name,
+      };
+      return userData;
+    } catch (error) {
+      console.error("error :>> ", error);
     }
     isLoading = false;
   };
@@ -44,7 +74,6 @@
     }),
     onSubmit: (userValues) => {
       handleSubmitLoginUser(userValues);
-      // console.log("userValues :>> ", userValues);
     },
   });
 </script>

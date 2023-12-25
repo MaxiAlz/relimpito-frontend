@@ -39,15 +39,22 @@
   {#if isloading}
     <span class="loading loading-spinner loading-lg text-primary" />
   {/if}
-  {#each products as product (product.id)}
-    <button on:click={() => viewProduct(product.id)}>
-      <CardProduct dataProduct={product} />
-    </button>
-  {/each}
+  {#if !isloading && !products.length}
+    <h2 class="p-5 text-center">
+      No se pudo obtener la lista de articulos, pruebe mas tarde.
+    </h2>
+  {/if}
+  {#if products.length > 0}
+    {#each products as product (product.id)}
+      <button on:click={() => viewProduct(product.id)}>
+        <CardProduct dataProduct={product} />
+      </button>
+    {/each}
+  {/if}
+
   <div class="flex items-center justify-center w-full m-5">
-    <button
-      class="btn btn-secondary"
-      on:click={() => navigate("/ver-Articulos")}>Ver mas productos</button
+    <button class="btn btn-secondary" on:click={() => navigate("/Catalogo")}
+      >Ver mas productos</button
     >
   </div>
 </section>

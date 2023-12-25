@@ -50,7 +50,7 @@
       );
       notifications.info("La imagen fue borrada");
     } catch (error) {
-      console.log("error al borrar imgagen :>> ", error);
+      console.error("error al borrar imgagen :>> ", error);
       notifications.error("No se pudo borrar la imagen");
     }
     isLoading = false;

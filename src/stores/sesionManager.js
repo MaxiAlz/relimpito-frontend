@@ -10,6 +10,7 @@ export function logoutStoreUser() {
   userDataRelimpito.set(null)
   localStorage.removeItem("userRelimpito")
   localStorage.removeItem("userTokenRelimpito")
+  
 }
 
 export function loginStoreUser(user) {
@@ -37,8 +38,3 @@ export function getStorageTokenUser() {
   return null
 }
 
-
-
-
-
-// localStorage.setItem("userTokenRelimpito", data.jwt);
