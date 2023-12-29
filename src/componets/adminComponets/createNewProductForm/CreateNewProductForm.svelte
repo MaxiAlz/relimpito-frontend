@@ -109,6 +109,7 @@
       productCode: "",
       stock: "",
       productDescription: "",
+      uidProduct:"",
       categories: selectedTags,
       isActive: true,
     },

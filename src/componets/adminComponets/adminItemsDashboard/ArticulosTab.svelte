@@ -15,6 +15,7 @@
     alertParams = {};
 
   let isModalCreateProductOpen = false;
+  
   let isModalEditProdutOpen = false;
   let selectedEditArticule;
 

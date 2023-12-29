@@ -107,7 +107,7 @@
       notifications.success("Imagenes actualizadas", 3000);
     } catch (error) {
       notifications.error("Error al actualizar imagenes", 3000);
-      console.log("Error al cargar imagenes :>> ", error);
+      console.error("Error al cargar imagenes :>> ", error);
     }
   };
 

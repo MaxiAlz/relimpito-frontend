@@ -11,7 +11,7 @@ import { notifications } from '../componets/alertsUser/alert';
 
 let $token = getStorageTokenUser()
 
-$:console.log('$token :>> ', $token);
+// $:console.log('$token :>> ', $token);
 // Función genérica para realizar peticiones HTTP
 async function httpRequest(url, method, data = null) {
   $token = getStorageTokenUser()
