@@ -3,6 +3,7 @@
   import { httpRequest } from "../helpers/httpRequest";
   import { notifications } from "../componets/alertsUser/alert";
   import CarrouselProductImage from "../componets/imagenPreview/CarrouselProductImage.svelte";
+  import { addItemInShoppingCart } from "../stores/shoppingCart";
 
   export let routerParams;
   let productData;
@@ -29,6 +30,10 @@
     } finally {
       isloading = false;
     }
+  };
+
+  const addItemToPourchase = () => {
+    addItemInShoppingCart(routerParams.idProduct);
   };
 
   // categories?populate=products&filters[name][$eqi]=plasticos
@@ -125,7 +130,9 @@
           </p>
         </div>
         <div class="card-actions my-5 md:justify-end">
-          <button class="btn btn-primary btn-outline max-sm:w-full"
+          <button
+            class="btn btn-primary btn-outline max-sm:w-full"
+            on:click={addItemToPourchase}
             ><span class="material-symbols-outlined">
               shopping_cart
             </span>Agregar al Carrito</button
