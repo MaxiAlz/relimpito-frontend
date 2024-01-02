@@ -14,6 +14,7 @@
   import Footer from "./componets/landingPage/Footer.svelte";
   import { userDataRelimpito } from "./stores/sesionManager";
   import Catalog from "./routes/Catalog.svelte";
+  import ViewMyShoppingCart from "./routes/ViewMyShoppingCart.svelte";
 
   export let urlRouting = "";
   let pathUrl = window.location.pathname;
@@ -22,7 +23,6 @@
 </script>
 
 <AlertToast />
-<!-- <button on:click={getUserRole}>maveeeeeeeer</button> -->
 <main>
   <Router url={urlRouting}>
     <!-- este seria el navbar -->
@@ -40,16 +40,16 @@
       <ViewProductDetails routerParams={params} />
     </Route>
 
-    {#if $userDataRelimpito.role === "admin"}
+    <Route path="/Mi-Carrito" component={ViewMyShoppingCart} />
+
+    {#if $userDataRelimpito?.role === "admin"}
       <Route path="/admin" component={Administrator} />
       <Route path="/admin/Articulos" component={ArticulosTab} />
       <Route path="/admin/:section/" let:params>
         <Administrator paramsRouter={params} />
       </Route>
     {/if}
-    <!-- <Route path="/admin/editar/:articule/" let:params>
-      <EditArticule paramsRouter={params} />
-    </Route> -->
+   
     <Route path="*" component={ErrorPage} />
     {#if pathUrl != "/Login"}
       <Footer />

@@ -3,7 +3,7 @@
   import { httpRequest } from "../helpers/httpRequest";
   import { notifications } from "../componets/alertsUser/alert";
   import CarrouselProductImage from "../componets/imagenPreview/CarrouselProductImage.svelte";
-  import { addItemInShoppingCart } from "../stores/shoppingCart";
+  import { addAnItemInShoppingCart } from "../stores/shoppingCart";
 
   export let routerParams;
   let productData;
@@ -33,7 +33,7 @@
   };
 
   const addItemToPourchase = () => {
-    addItemInShoppingCart(routerParams.idProduct);
+    addAnItemInShoppingCart(routerParams.idProduct);
   };
 
   // categories?populate=products&filters[name][$eqi]=plasticos
