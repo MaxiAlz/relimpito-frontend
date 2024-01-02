@@ -122,7 +122,9 @@
         </g>
       </g></svg
     >
-    <span class="text-primary font-bold uppercase">Atencion online</span>
+    <span class="text-primary font-bold uppercase"
+      >Atencion online mayorista</span
+    >
     <p class="m-2">
       Realiza tu compra de manera online, envia el detalle, espera la
       confirmacion del pago y recibilo en tu domicilio.
