@@ -15,34 +15,36 @@
     isFirstloading = true;
     itemsLocalStorageCart = getShoppingCartLocarStorage() || [];
     if (itemsLocalStorageCart.length > 0) {
+      isUpdating = true;
       getProductsFromShoppingCart();
     }
     isFirstloading = false;
   });
 
   let itemsLocalStorageCart = []; //aca me setea los productos del carrito en el local storage
-  let productsInCart = []; //aca seto loa productos que matchean con los del carrito del local storage para tener los precios y otra informacion
+  let productsInCart = []; //aca seteo productos que matchean con los del carrito del local storage para tener los precios y otra informacion
   let isFirstloading = false;
   let isUpdating = false;
   let totalPriceProducts = 0;
-
   let purchaseProductDetail = {}; //aca guardo el detalle completo de la compra (productos, precios, detalles, etc)
+  let amountMessageError = {};
 
   const setPurchaseDetail = (productsInCart) => {
     // crea un objeto con todos los detalles de la compra por fila de producto, agrega cantidad y calcula el precio parcial
     let productDetails = productsInCart.map(
       (product) => (
-        (product.amount = setAmountProductInDetail(product.id)),
+        (product.amount = getAmountProductInDetail(product.id)),
         (product.totalPrice =
-          setAmountProductInDetail(product.id) *
-          product.attributes.retailPrice),
+          getAmountProductInDetail(product.id) *
+          product.attributes.wholesalePrice),
         product
       )
     );
     return (purchaseProductDetail = { productDetails });
   };
 
-  const calculateTotalPricePurchase = () => {
+  // Caclula el total unicamente de los productos
+  const calculateTotalPriceOfProducts = () => {
     const prices = purchaseProductDetail.productDetails.map(
       (product) => product.totalPrice
     );
@@ -53,10 +55,19 @@
       ...purchaseProductDetail,
       purchaseDetail: { totalPriceOfProducts },
     };
+
+    calculateTotalPriceOfPurchase();
+  };
+
+  const calculateTotalPriceOfPurchase = () => {
+    //logica para calcular todos los recargos que puedan haber y colocarlos en purchaseProductDetail y luego retornar total
+    const total = purchaseProductDetail.purchaseDetail.totalPriceOfProducts;
+
+    return (purchaseProductDetail.purchaseDetail.total = total);
   };
 
   const getProductsFromShoppingCart = async () => {
-    isUpdating = true;
+    // isUpdating = true;
     const producstIds = itemsLocalStorageCart.map((item) => item.idArticule);
     const filters = producstIds.map((id) => `filters[id][$in]=${id}`).join("&");
 
@@ -65,7 +76,7 @@
 
       productsInCart = data.data;
       setPurchaseDetail(data.data);
-      calculateTotalPricePurchase();
+      calculateTotalPriceOfProducts();
     } catch (error) {
       console.error("Error al obtener información del carrito:", error);
       notifications.error("Error al obtener información del carrito");
@@ -78,6 +89,7 @@
     addAnItemInShoppingCart(id);
     itemsLocalStorageCart = getShoppingCartLocarStorage() || [];
     if (itemsLocalStorageCart.length > 0) {
+      isUpdating = true;
       await getProductsFromShoppingCart();
     }
   };
@@ -86,34 +98,60 @@
     removeAnItemInShoppingCart(id);
     itemsLocalStorageCart = getShoppingCartLocarStorage() || [];
     if (itemsLocalStorageCart.length > 0) {
+      isUpdating = true;
       await getProductsFromShoppingCart();
     }
   };
 
-  const setAmountProductInDetail = (idproduct) => {
+  const getAmountProductInDetail = (idproduct) => {
     const { amount } = itemsLocalStorageCart.find(
       (item) => item.idArticule == idproduct
     );
     return amount;
   };
 
-  const setAmountProductByManopla = async (idProduct, event) => {
+  const setAmountProductByManopla = async (idProduct, event, stock) => {
     const newAmont = parseInt(event.target.value);
-    addSomeProductInCart(idProduct, newAmont);
-    itemsLocalStorageCart = getShoppingCartLocarStorage() || [];
-    if (itemsLocalStorageCart.length > 0) {
-      await getProductsFromShoppingCart();
+    validateAmountEntries(idProduct, newAmont, stock);
+
+    if (newAmont <= stock && newAmont > 0) {
+      addSomeProductInCart(idProduct, newAmont);
+      itemsLocalStorageCart = getShoppingCartLocarStorage() || [];
+      amountMessageError.msg = "";
+      if (itemsLocalStorageCart.length > 0) {
+        isUpdating = true;
+        await getProductsFromShoppingCart();
+      }
     }
   };
 
-  const userPressEnter = (idProduct, event) => {
+  const userPressEnter = (idProduct, event, stock) => {
     if (event.key === "Enter") {
-      setAmountProductByManopla(idProduct, event);
+      setAmountProductByManopla(idProduct, event, stock);
+    }
+  };
+
+  const validateAmountEntries = (idProduct, newAmont, stock) => {
+    if (newAmont > stock) {
+      amountMessageError.msg =
+        "La cantidad no puede ser mayor a el stock actual";
+      amountMessageError.id = idProduct;
+    }
+    if (!newAmont) {
+      amountMessageError.msg = "Este campo no puede quedar vacio";
+      amountMessageError.id = idProduct;
+    }
+    if (!Number.isInteger(newAmont)) {
+      amountMessageError.msg = "Este campo debe ser un numero entero";
+      amountMessageError.id = idProduct;
     }
   };
 </script>
 
-<h1 class="text-xl text-primary uppercase font-semibold text-center my-5">
+<h1
+  class="text-xl text-primary uppercase font-semibold text-center items-center justify-center flex my-5"
+>
+  <span class="material-symbols-outlined"> shopping_cart </span>
   Mi carrito de compras
 </h1>
 
@@ -127,6 +165,7 @@
     <div class="card w-full flex m-2">
       <table class="table overflow-x-auto shadow">
         <!-- head -->
+
         <thead>
           <tr>
             <th>Codigo</th>
@@ -146,9 +185,14 @@
               </td>
               <td>
                 <div class="flex flex-col items-start">
-                  <span class="text-neutral uppercase font-semibold"
-                    >{attributes.productName}</span
+                  <button
+                    on:click={() => navigate(`/Articulos/Ver-Producto/${id}`)}
                   >
+                    <span
+                      class="text-neutral uppercase font-semibold hover:text-primary"
+                      >{attributes.productName}</span
+                    >
+                  </button>
                   <button class="btn btn-ghost text-primary btn-xs mt-1"
                     >Eliminar</button
                   >
@@ -158,24 +202,38 @@
                 <div class="join">
                   <button
                     class="btn btn-sm join-item"
+                    disabled={amount <= 0}
                     on:click={() => updateRemoveAnAmountProduct(id)}>-</button
                   >
                   <input
                     type="text"
                     class="input input-sm join-item w-16 text-center font-semibold"
-                    on:blur={(e) => setAmountProductByManopla(id, e)}
-                    on:keydown={(e) => userPressEnter(id, e)}
+                    on:blur={(e) =>
+                      setAmountProductByManopla(id, e, attributes.stock)}
+                    on:keydown={(e) => userPressEnter(id, e, attributes.stock)}
                     value={amount}
                   />
                   <button
                     class="btn btn-sm join-item"
+                    disabled={amount >= attributes.stock}
                     on:click={() => updateIncreaseAnAmountProduct(id)}>+</button
                   >
                 </div>
 
-                <span class="opacity-80 text-sm"
-                  >{attributes.stock} diponibles
-                </span>
+                <div
+                  class={amountMessageError.id === id && amountMessageError.msg
+                    ? "tooltip tooltip-open tooltip-bottom tooltip-error"
+                    : null}
+                  data-tip={amountMessageError.msg}
+                >
+                  <span
+                    class={amountMessageError.id === id &&
+                    amountMessageError.msg
+                      ? "text-sm text-center text-error font-semibold"
+                      : "opacity-80 text-sm text-center"}
+                    >{attributes.stock} disponibles
+                  </span>
+                </div>
               </td>
               <td>
                 {#if isUpdating}
@@ -191,7 +249,7 @@
                       >${totalPrice},00</span
                     >
                     <span class="opacity-80 text-sm">
-                      ${attributes.retailPrice},00 c/u</span
+                      ${attributes.wholesalePrice},00 c/u</span
                     >
                   </div>
                 {/if}
@@ -216,12 +274,14 @@
           </div>
           <div class="flex justify-between">
             <span>Gastos extras:</span>
-            <span class="">(envio) $1500,00</span>
+            <span class=""><!-- (envio) $1500,00 -->-</span>
           </div>
           <div class="divider m-0 p-0"></div>
           <div class="flex justify-between">
-            <span>Total:</span>
-            <span class="font-semibold text-lg">${totalPriceProducts},00</span>
+            <span>Total: </span>
+            <span class="font-semibold text-lg"
+              >${purchaseProductDetail.purchaseDetail.total},00</span
+            >
           </div>
         {/if}
         {#if isUpdating}
@@ -231,7 +291,10 @@
           </div>
         {/if}
         <div class="card-actions">
-          <button class="btn btn-primary w-full">Continuar compra</button>
+          <button
+            class="btn btn-primary w-full"
+            disabled={amountMessageError.msg}>Continuar compra</button
+          >
         </div>
       </div>
       <div class="divider"></div>
@@ -243,7 +306,7 @@
   {/if}
 </section>
 <section class="flex flex-col items-center">
-  {#if !isFirstloading && !purchaseProductDetail.productDetails}
+  {#if isFirstloading && !purchaseProductDetail.productDetails}
     <h2 class="text-center font-semibold text-2xl">
       Tu carrito esta vacio <span class="material-symbols-outlined">
         sentiment_sad
