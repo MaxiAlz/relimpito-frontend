@@ -2,6 +2,7 @@
   /*
   Este componente es el encargado de renderizar cada dashboard segun el rol del usuario
   */
+  import logoVerticalRelimpito from "../../assets/Logo-Relimpito-BLANCO.png";
   import UserProfileOptions from "../navigation/UserProfileOptions.svelte";
   import BudgeteShoppingCard from "../shoppingCart/BudgeteShoppingCard.svelte";
   import AdminDashboard from "./AdminDashboard.svelte";
@@ -36,6 +37,7 @@
           </svg>
         </button>
       </div>
+      <img src={logoVerticalRelimpito} alt={logoVerticalRelimpito}  />
 
       <div class="flex-1 px-2 mx-2 text-secondary font-semibold">
         NAVBAR TITLE
@@ -55,7 +57,7 @@
               <span class="badge badge-xs badge-secondary indicator-item" />
             </div>
           </button>
-          <UserProfileOptions userData={user} />
+          <UserProfileOptions />
         </div>
       {/if}
     </div>
@@ -68,7 +70,7 @@
       <!-- Sidebar content here -->
       <li>sidebar item1</li>
       <li>sidebar item2</li>
-      <!-- <li><a>Sidebar Item 2</a></li> -->
+     
     </ul>
   </div>
 </div>
