@@ -85,8 +85,8 @@
 <style>
   @media only screen and (width <= 768px) {
     .mapa-ubicacion {
-      width: 22rem;
-      height: 15rem;
+      width: 20rem;
+      height: 13rem;
     }
     .cosito {
       display: none;

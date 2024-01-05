@@ -14,6 +14,7 @@
   import { onMount } from "svelte";
 
   let isLoading = false;
+  let viewPassword = false;
 
   onMount(() => isUSerLoged());
 
@@ -32,7 +33,8 @@
         "POST",
         userValues
       );
-      if (status == 200) {
+      console.log("data.user.username :>> ", data.user.username);
+      if (status == 200 && data.user.username) {
         storeUserToken(data.jwt);
         const userData = await getUserData();
         loginStoreUser(userData);
@@ -76,6 +78,11 @@
       handleSubmitLoginUser(userValues);
     },
   });
+
+  const handleChangeVisibility = (e) => {
+    viewPassword = !viewPassword;
+    e.preventDefault();
+  };
 </script>
 
 <form on:submit={handleSubmit}>
@@ -90,6 +97,7 @@
 
     <input
       type="text"
+      id="identifier"
       placeholder="ejemplo@hotmail.com"
       class="input input-bordered w-full"
       bind:value={$form.identifier}
@@ -97,16 +105,36 @@
     />
     <FormErrorMsg error={$errors.identifier} />
 
-    <label class="label-text my-2 text-neutral" for="password"
-      >Contraseña:</label
-    >
-    <input
-      type="password"
-      placeholder="Escribir contraseña"
-      class="input input-bordered w-full"
-      bind:value={$form.password}
-      on:change={handleChange}
-    />
+    <div class="flex justify-between items-center">
+      <label class="label-text my-2 text-neutral" for="password"
+        >Contraseña:</label
+      >
+      <button class="btn btn-ghost btn-sm" on:click={handleChangeVisibility}>
+        <span class="material-symbols-outlined">
+          {viewPassword ? "visibility_off" : "visibility"}
+        </span>
+      </button>
+    </div>
+    {#if !viewPassword}
+      <input
+        type="password"
+        id="password"
+        placeholder="Escribir contraseña"
+        class="input input-bordered w-full"
+        bind:value={$form.password}
+        on:change={handleChange}
+      />
+    {/if}
+    {#if viewPassword}
+      <input
+        type="text"
+        id="password"
+        placeholder="Escribir contraseña"
+        class="input input-bordered w-full"
+        bind:value={$form.password}
+        on:change={handleChange}
+      />
+    {/if}
     <FormErrorMsg error={$errors.password} />
     <button class="btn btn-primary mt-5 w-full" type="submit">
       {#if isLoading}

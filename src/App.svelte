@@ -19,7 +19,7 @@
   export let urlRouting = "";
   let pathUrl = window.location.pathname;
 
-  console.log("userDataRelimpito :>> ", $userDataRelimpito);
+  $: console.log("userDataRelimpito :>> ", $userDataRelimpito);
 </script>
 
 <AlertToast />
@@ -27,8 +27,13 @@
   <Router url={urlRouting}>
     <!-- este seria el navbar -->
     <!-- <Dashboard /> -->
-    {#if pathUrl != "/Login"}
+    <!-- {#if pathUrl != "/Login"}
       <Drawer />
+    {/if} -->
+    {#if location}
+      {#if location.pathname !== "/Login"}
+        <Drawer />
+      {/if}
     {/if}
     <Route path="/" component={Home} />
 
@@ -49,10 +54,17 @@
         <Administrator paramsRouter={params} />
       </Route>
     {/if}
-   
+
     <Route path="*" component={ErrorPage} />
-    {#if pathUrl != "/Login"}
+
+    <!-- {#if pathUrl != "/Login"}
       <Footer />
+    {/if} -->
+
+    {#if location}
+      {#if location.pathname !== "/Login"}
+        <Footer />
+      {/if}
     {/if}
   </Router>
 </main>
