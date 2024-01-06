@@ -1,13 +1,11 @@
-<!-- 
-  @component
-  Componente modal
-  open: variable que maneja el estado si el modal esta abierto o cerrado (boolean)
-  title : titulo del componente
-  slot : contenido del componente
-  
- -->
-
 <script>
+  /**
+   * @component  Modal
+   * @param open variable que maneja el estado si el modal esta abierto o cerrado (boolean)
+   * @param title : titulo del componente
+   * @param  slot : contenido del componente (ej: Formulario)
+  */
+
   export let open, title;
   import { createEventDispatcher } from "svelte";
 
