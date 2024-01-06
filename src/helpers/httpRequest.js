@@ -11,7 +11,7 @@ import { notifications } from '../componets/alertsUser/alert';
 
 let $token = getStorageTokenUser()
 
-// $:console.log('$token :>> ', $token);
+
 // Función genérica para realizar peticiones HTTP
 async function httpRequest(url, method, data = null) {
   $token = getStorageTokenUser()
@@ -39,10 +39,10 @@ async function httpRequest(url, method, data = null) {
     }
     // Manejo de errores
     if (error.response) {
-      notifications.error(`Error en la petición: ${error.response.status} - ${error.response.statusText}`)
+      notifications.error(`Error: ${error.response.status} - ${error.response.statusText}`, 5000)
       throw new Error(`Error en la petición: ${error.response.status} - ${error.response.statusText}`);
     } else if (error.request) {
-      notifications.error('No se pudo obtener respuesta del servidor')
+      notifications.error('No se pudo obtener respuesta del servidor', 5000)
       throw new Error('No se pudo obtener respuesta del servidor');
     }
 
