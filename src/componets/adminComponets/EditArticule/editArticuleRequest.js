@@ -23,7 +23,7 @@ const editProduct = async (productValuesToEdit, productId) => {
     // console.log('data :>> ', data, status);
     // return { data, status }
   } catch (error) {
-    console.log('error al editar :>> ');
+    console.error('error al editar :>> ');
   }
 }
 

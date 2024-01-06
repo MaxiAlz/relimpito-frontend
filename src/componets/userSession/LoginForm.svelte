@@ -4,7 +4,7 @@
   import { httpRequest } from "../../helpers/httpRequest";
   import { notifications } from "../alertsUser/alert";
   import { createForm } from "svelte-forms-lib";
-  import { errorMsg } from "../constants/defaultMessages";
+  import {  requiredInput } from "../constants/defaultMessages";
   import FormErrorMsg from "../formErrorMsg/FormErrorMsg.svelte";
   import {
     getStorageTokenUser,
@@ -71,8 +71,8 @@
       password: "",
     },
     validationSchema: yup.object().shape({
-      identifier: yup.string().required(errorMsg),
-      password: yup.string().required(errorMsg),
+      identifier: yup.string().required(requiredInput),
+      password: yup.string().required(requiredInput),
     }),
     onSubmit: (userValues) => {
       handleSubmitLoginUser(userValues);

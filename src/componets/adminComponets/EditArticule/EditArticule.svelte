@@ -8,7 +8,6 @@
     getProductById,
   } from "./editArticuleRequest";
   import Loanding from "../../loader/Loanding.svelte";
-  import { errorMsg } from "../../constants/defaultMessages";
   import FormErrorMsg from "../../formErrorMsg/FormErrorMsg.svelte";
   import { initialValues, validationSchema } from "./editArticulesConstants";
   import { notifications } from "../../alertsUser/alert";

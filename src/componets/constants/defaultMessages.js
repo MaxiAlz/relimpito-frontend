@@ -1,3 +1,5 @@
-const errorMsg = "Este campo es requerido*";
+const requiredInput = "Este campo es requerido*";
+const stringErrorMsg = "Ingrese solo letras"
+const emailErrorMsg = "Formato invalido para email"
 
-export { errorMsg }
+export { requiredInput, stringErrorMsg, emailErrorMsg }

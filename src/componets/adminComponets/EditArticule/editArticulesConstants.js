@@ -1,5 +1,5 @@
 import * as yup from "yup";
-import { errorMsg } from "../../constants/defaultMessages";
+import { requiredInput } from "../../constants/defaultMessages";
 
 const initialValues = {
   imgesProduct: [],
@@ -13,13 +13,13 @@ const initialValues = {
 }
 const validationSchema = yup.object().shape({
   imgesProduct: yup.array().length(5, "solo puede subir hasta 5 imagenes"),
-  productName: yup.string().required(errorMsg),
-  wholesalePrice: yup.string().required(errorMsg),
-  retailPrice: yup.string().required(errorMsg),
-  productCode: yup.string().required(errorMsg),
-  stock: yup.string().required(errorMsg),
-  productDescription: yup.string().required(errorMsg),
-  categories: yup.array().required(errorMsg),
+  productName: yup.string().required(requiredInput),
+  wholesalePrice: yup.string().required(requiredInput),
+  retailPrice: yup.string().required(requiredInput),
+  productCode: yup.string().required(requiredInput),
+  stock: yup.string().required(requiredInput),
+  productDescription: yup.string().required(requiredInput),
+  categories: yup.array().required(requiredInput),
   isActive: yup.boolean(),
 })
 
