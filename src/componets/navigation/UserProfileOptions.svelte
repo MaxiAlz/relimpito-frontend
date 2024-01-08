@@ -4,9 +4,10 @@
     logoutStoreUser,
     userDataRelimpito,
   } from "../../stores/sesionManager";
+  import Modal from "../modal/Modal.svelte";
+  import UserProfileInfoModal from "../users/UserProfileInfoModal.svelte";
 
-  // import { $userDataRelimpito, logoutStoreUser } from "../../stores/$userDataRelimpito.store";
-  // import { push } from "svelte-spa-router";
+  let isModalProfineInfoOpen = false;
 
   function truncateText(text) {
     const lastSpaceIndex = text.indexOf(" ");
@@ -48,11 +49,21 @@
     >
     <div class="divider m-0" />
     <li class="pl-2 mb-2 text-neutral">
-      <button>
+      <button on:click={() => (isModalProfineInfoOpen = true)}>
         <span class="material-symbols-outlined"> person </span>
         Perfil
       </button>
     </li>
+    {#if $userDataRelimpito.role === "admin"}
+      <li class="pl-2 mb-2 text-neutral">
+        <button on:click={() => navigate("/admin")}>
+          <span class="material-symbols-outlined"> admin_panel_settings </span>
+          Panel de administrador
+        </button>
+      </li>
+    {/if}
+
+    <div class="divider"></div>
     <li class="pl-2 mt-2 mb-2 text-neutral">
       <button on:click={logout}>
         <span class="material-symbols-outlined"> close </span>
@@ -62,12 +73,15 @@
   </ul>
 </div>
 
+<UserProfileInfoModal {isModalProfineInfoOpen} title={"Mi perfil"} />
+
 <style>
   .containerProfile {
     display: flex;
     align-items: center;
     justify-content: space-between;
   }
+
   /* .profileOptionButton {
     border-radius: 2rem;
   } */
