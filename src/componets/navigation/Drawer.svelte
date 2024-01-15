@@ -1,5 +1,5 @@
 <script>
-  import { Link } from "svelte-routing";
+  import { Link, navigate } from "svelte-routing";
   import logoVerticalRelimpito from "../../assets/Logo-Relimpito-BLANCO.png";
   import UserProfileOptions from "./UserProfileOptions.svelte";
   import BudgeteShoppingCard from "../shoppingCart/BudgeteShoppingCard.svelte";
@@ -31,15 +31,17 @@
       </div>
 
       <div class="flex-1 px-2 mx-2 text-secondary font-semibold">
-        <img
-          src={logoVerticalRelimpito}
-          alt={logoVerticalRelimpito}
-          width="200"
-        />
+        <button type="button" on:click={() => navigate("/")}>
+          <img
+            src={logoVerticalRelimpito}
+            alt={logoVerticalRelimpito}
+            width="200"
+          />
+        </button>
       </div>
 
       <!-- OPCIONES USUARIO LOGEADO -->
-      {#if $userDataRelimpito?.name}
+      {#if $userDataRelimpito?.username}
         <div>
           <div class="dropdown dropdown-end">
             <BudgeteShoppingCard />
@@ -56,12 +58,11 @@
         </div>
       {/if}
 
-      <!-- USUARIO NO LOGEADO -->
-      {#if !$userDataRelimpito?.name}
+      <!-- USUARIO NO LOGEADO MOBILE-->
+      {#if !$userDataRelimpito?.username}
         <div class="flex-none hidden lg:block font-normal text-white">
           <ul class="menu menu-horizontal">
-            <!-- Navbar menu content here -->
-            <Link to="/Articulos"
+            <Link to="/Catalogo"
               ><button class="btn btn-ghost btn-sm"> Articulos </button></Link
             >
             <Link to="/Contacto"
@@ -70,27 +71,36 @@
             <Link to="/Nosotros"
               ><button class="btn btn-ghost btn-sm"> Nosotros </button></Link
             >
-
-            <!-- <Link to="/Login">
-              <button class="btn btn-secondary btn-sm ml-2"
-                ><span class="material-symbols-outlined"> person </span>
-                Ingresar
-              </button></Link
+            <!-- <Link to="/Nosotros"
+              ><button class="btn btn-ghost btn-sm"> Nosotros </button></Link
             > -->
+            <Link to="/Login"
+              ><button class="btn btn-ghost btn-sm">
+                Pedidos Online
+              </button></Link
+            >
           </ul>
+          <div class="dropdown dropdown-end">
+            <BudgeteShoppingCard />
+          </div>
         </div>
       {/if}
     </div>
-
-    <!-- Page content here -->
   </div>
-  <div class="drawer-side">
+
+  <div class="drawer-side z-50">
     <label for="my-drawer-3" class="drawer-overlay" />
     <ul class="menu p-4 w-80 min-h-full bg-base-200">
-      <!-- Sidebar content here -->
-      <li>sidebar item1</li>
-      <li>sidebar item2</li>
-      <!-- <li><a>Sidebar Item 2</a></li> -->
+      <Link to="/Catalogo"
+        ><button class="btn btn-ghost btn-sm"> Articulos </button></Link
+      >
+      <Link to="/Contacto"
+        ><button class="btn btn-ghost btn-sm"> Contacto </button></Link
+      >
+      <Link to="/Nosotros"
+        ><button class="btn btn-ghost btn-sm"> Nosotros </button></Link
+      >
+      <Link to="/"><button class="btn btn-ghost btn-sm"> Inicio </button></Link>
     </ul>
   </div>
 </div>
