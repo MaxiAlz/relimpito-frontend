@@ -109,7 +109,7 @@
       productCode: "",
       stock: "",
       productDescription: "",
-      uidProduct:"",
+     
       categories: selectedTags,
       isActive: true,
     },
@@ -120,7 +120,7 @@
   });
 </script>
 
-<!-- <AlertToast /> -->
+
 {#if isLoading}
   <Loanding />
 {/if}
@@ -131,7 +131,7 @@
   <section class="my-3">
     <div>
       <label class="label" for="articuleName">
-        <span class="label-text text-primary font-semibold">Titulo:</span>
+        <span class="label-text text-primary font-semibold">Email:</span>
       </label>
       <input
         type="text"
@@ -144,6 +144,7 @@
       />
       <FormErrorMsg error={$errors.productName} />
     </div>
+   
     <label class="label" for="price">
       <span class="label-text text-primary font-semibold">Precio:</span>
     </label>
