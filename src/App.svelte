@@ -20,6 +20,11 @@
   let pathUrl = window.location.pathname;
 
   $: console.log("userDataRelimpito :>> ", $userDataRelimpito);
+
+  console.log(
+    '!pathUrl.startsWith("/admin") :>> ',
+    !pathUrl.startsWith("/admin")
+  );
 </script>
 
 <AlertToast />
@@ -57,12 +62,12 @@
 
     <Route path="*" component={ErrorPage} />
 
-    <!-- {#if pathUrl != "/Login"}
+    <!-- {#if pathUrl != "/Login" && !pathUrl.startsWith("/admin")}
       <Footer />
     {/if} -->
 
     {#if location}
-      {#if location.pathname !== "/Login"}
+      {#if location.pathname !== "/Login" && !pathUrl.startsWith("/admin")}
         <Footer />
       {/if}
     {/if}
