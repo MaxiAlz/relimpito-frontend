@@ -2,16 +2,10 @@
   /*
   Este componente es el encargado de renderizar cada dashboard segun el rol del usuario
   */
-  import logoVerticalRelimpito from "../../assets/Logo-Relimpito-BLANCO.png";
+  // import logoVerticalRelimpito from "../../assets/Logo-Relimpito-BLANCO.png";
   import UserProfileOptions from "../navigation/UserProfileOptions.svelte";
   import BudgeteShoppingCard from "../shoppingCart/BudgeteShoppingCard.svelte";
   import AdminDashboard from "./AdminDashboard.svelte";
-
-  let user = {
-    name: "Relimpito",
-    userName: "RelimpitoAdmin",
-    role: "Admin",
-  };
 </script>
 
 <div class="drawer">
@@ -37,14 +31,14 @@
           </svg>
         </button>
       </div>
-      <img src={logoVerticalRelimpito} alt={logoVerticalRelimpito}  />
+      <!-- <img src={logoVerticalRelimpito} alt={logoVerticalRelimpito} /> -->
 
       <div class="flex-1 px-2 mx-2 text-secondary font-semibold">
         NAVBAR TITLE
       </div>
 
       <!-- OPCIONES USUARIO LOGEADO -->
-      {#if user.role == "Admin"}
+      <!-- {#if user.role == "Admin"}
         <div>
           <div class="dropdown dropdown-end">
             <BudgeteShoppingCard />
@@ -59,7 +53,7 @@
           </button>
           <UserProfileOptions />
         </div>
-      {/if}
+      {/if} -->
     </div>
 
     <!-- <AdminDashboard /> -->
@@ -70,14 +64,13 @@
       <!-- Sidebar content here -->
       <li>sidebar item1</li>
       <li>sidebar item2</li>
-     
     </ul>
   </div>
 </div>
 
-<style>
+<!-- <style>
   .icon-color {
     color: yellow;
     width: 2rem;
   }
-</style>
+</style> -->
