@@ -4,7 +4,7 @@
   import { httpRequest } from "../../helpers/httpRequest";
   import { notifications } from "../alertsUser/alert";
   import { createForm } from "svelte-forms-lib";
-  import {  requiredInput } from "../constants/defaultMessages";
+  import { requiredInput } from "../constants/defaultMessages";
   import FormErrorMsg from "../formErrorMsg/FormErrorMsg.svelte";
   import {
     getStorageTokenUser,
@@ -33,7 +33,6 @@
         "POST",
         userValues
       );
-      console.log("data.user.username :>> ", data.user.username);
       if (status == 200 && data.user.username) {
         storeUserToken(data.jwt);
         const userData = await getUserData();
@@ -52,13 +51,17 @@
     isLoading = true;
     try {
       const { data } = await httpRequest("/users/me?populate=*", "GET");
-      let userData = {
-        name: data.name,
-        lastName: data.lastName,
-        username: data.username,
-        role: data.role.name,
-      };
-      return userData;
+
+      if (data.username) {
+        console.log("data :>> ", data);
+        let userData = {
+          name: data.name,
+          lastName: data.lastName,
+          username: data.username,
+          role: data.role?.name,
+        };
+        return userData;
+      }
     } catch (error) {
       console.error("error :>> ", error);
     }
