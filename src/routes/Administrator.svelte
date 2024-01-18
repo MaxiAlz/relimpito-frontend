@@ -27,15 +27,20 @@
 </script>
 
 <main class="flex">
-  <div class="w-52 bg-gray-100 shadow-inner heightDashboard p-5">
+  <div class=" bg-gray-100 shadow-inner heightDashboard p-5 w-52">
     {#each dashboardItems as item}
-      <ul class="my-5">
+      <ul class="my-5 w-full flex">
         <button
           class={`btn  btn-sm ${
             item.id == selectedItem.id ? "btn-primary" : "btn-ghost"
           } `}
-          on:click={() => selectedTab(item)}>{item.value}</button
+          on:click={() => selectedTab(item)}
         >
+          <span class="material-symbols-outlined">
+            {item.icon}
+          </span>
+          {item.value}
+        </button>
       </ul>
     {/each}
   </div>
