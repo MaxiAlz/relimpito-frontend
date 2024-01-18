@@ -33,7 +33,8 @@
   };
 
   const addItemToPourchase = () => {
-    addAnItemInShoppingCart(routerParams.idProduct);
+    addAnItemInShoppingCart(parseInt(routerParams.idProduct));
+    notifications.success("Se agregó un producto al carrito");
   };
 
   // categories?populate=products&filters[name][$eqi]=plasticos
@@ -97,20 +98,27 @@
           >$ {productData?.attributes?.retailPrice},00</span
         >
         {#if productData?.attributes?.stock > 0}
-          <div
-            class="badge badge-secondary text-neutral font-semibold p-2 ml-5"
-          >
-            Stock disponible
+          <div class="flex flex-col ml-5">
+            <span class="badge badge-secondary text-neutral font-semibold">
+              Stock disponible: {productData?.attributes?.stock}
+            </span>
+            <span class="label-text text-sm opacity-70 m-1"
+              >Caja: {productData?.attributes?.closedBox} Unidades</span
+            >
           </div>
         {:else}
-          <div class="badge badge-ghost text-neutral font-semibold p-2 ml-5">
+          <span
+            class="badge badge-secondary text-neutral font-semibold p-2 ml-5"
+          >
             Sin stock
-          </div>
+          </span>
         {/if}
       </div>
-      <span class="label-text text-sm opacity-70"
-        >CODIGO: {productData?.attributes?.productCode}</span
-      >
+      <div class="flex">
+        <span class="label-text text-sm opacity-70 uppercase"
+          >Codigo: {productData?.attributes?.productCode}</span
+        >
+      </div>
       {#if productData?.attributes?.categories?.data.length > 0}
         <span class="text-primary font-semibold mt-2">Categorias:</span>
         <div class="card-actions justify-start">
