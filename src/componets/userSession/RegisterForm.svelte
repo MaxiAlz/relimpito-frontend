@@ -5,7 +5,7 @@
   import { httpRequest } from "../../helpers/httpRequest";
   import { notifications } from "../alertsUser/alert";
   import { navigate } from "svelte-routing";
-  import { errorMsg } from "../constants/defaultMessages";
+  import { requiredInput } from "../constants/defaultMessages";
 
   let showPassword = false;
   let secondPassword = "";
@@ -38,10 +38,9 @@
       password: "",
     },
     validationSchema: yup.object().shape({
-      username: yup.string().required(errorMsg),
-      email: yup.string().email().required(errorMsg),
-      password: yup.string().required(errorMsg),
-      // secondPassword: yup.string().required(errorMsg),
+      username: yup.string().required(requiredInput),
+      email: yup.string().email().required(requiredInput),
+      password: yup.string().required(requiredInput),
     }),
     onSubmit: (userValues) => {
       handleSubmiRegisterUser(userValues);
