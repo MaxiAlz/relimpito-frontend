@@ -14,7 +14,8 @@
       <img src={isotipo} alt={isotipo} width="100" />
     </div>
     {#if isRegistering}
-      <RegisterForm />
+      <!-- <RegisterForm /> -->
+      <div>Solicita tu cuenta</div>
     {:else}
       <LoginForm />
     {/if}
@@ -34,29 +35,6 @@
     </div>
   </section>
 </main>
-
-<!-- <style>
- 
-  form {
-    max-width: 300px;
-    margin: 0 auto;
-  }
-
-  input {
-    width: 100%;
-    margin-bottom: 1rem;
-    padding: 0.5rem;
-  }
-
-  button {
-    width: 100%;
-    padding: 0.75rem;
-    background-color: #4caf50;
-    color: white;
-    border: none;
-    cursor: pointer;
-  }
-</style> -->
 
 <style>
   .heighMain {
