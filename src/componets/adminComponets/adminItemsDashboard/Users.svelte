@@ -1,6 +1,6 @@
 <script>
   import { onMount } from "svelte";
-  import { httpRequest } from "../../../helpers/httpRequest";
+  import { httpRequest } from "../../../config/helpers/httpRequest";
   import { userDataRelimpito } from "../../../stores/sesionManager";
   import Modal from "../../modal/Modal.svelte";
   import CreateNewUSerForm from "../usersManager/CreateNewUSerForm.svelte";

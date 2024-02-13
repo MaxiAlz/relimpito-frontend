@@ -7,8 +7,8 @@
   import LoginAndRegisteForm from "./routes/LoginAndRegisteForm.svelte";
 
   import Drawer from "./componets/navigation/Drawer.svelte";
-  import Dashboard from "./componets/dashboard/Dashboard.svelte";
-  import AdminDashboard from "./componets/dashboard/AdminDashboard.svelte";
+  // import Dashboard from "./componets/dashboard/Dashboard.svelte";
+  // import AdminDashboard from "./componets/dashboard/AdminDashboard.svelte";
   import AlertToast from "./componets/alertsUser/AlertToast.svelte";
   import ArticulosTab from "./componets/adminComponets/adminItemsDashboard/ArticulosTab.svelte";
   import Footer from "./componets/landingPage/Footer.svelte";

@@ -1,7 +1,7 @@
 <script>
   import * as yup from "yup";
   import { navigate } from "svelte-routing";
-  import { httpRequest } from "../../helpers/httpRequest";
+  import { httpRequest } from "../../config/helpers/httpRequest";
   import { notifications } from "../alertsUser/alert";
   import { createForm } from "svelte-forms-lib";
   import { requiredInput } from "../constants/defaultMessages";

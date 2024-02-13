@@ -1,6 +1,6 @@
 <script>
   import { createEventDispatcher, onMount } from "svelte";
-  import { httpRequest } from "../../helpers/httpRequest";
+  import { httpRequest } from "../../config/helpers/httpRequest";
   import { notifications } from "../alertsUser/alert";
   import Loanding from "../loader/Loanding.svelte";
   /**

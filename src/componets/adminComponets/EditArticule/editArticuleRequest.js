@@ -1,4 +1,4 @@
-import { httpRequest } from "../../../helpers/httpRequest";
+import { httpRequest } from "../../../config/helpers/httpRequest";
 
 const getProductById = async (selectedEditArticule) => {
   try {

@@ -2,7 +2,7 @@
   import * as yup from "yup";
   import { createForm } from "svelte-forms-lib";
   import FormErrorMsg from "../formErrorMsg/FormErrorMsg.svelte";
-  import { httpRequest } from "../../helpers/httpRequest";
+  import { httpRequest } from "../../config/helpers/httpRequest";
   import { notifications } from "../alertsUser/alert";
   import { navigate } from "svelte-routing";
   import { requiredInput } from "../constants/defaultMessages";

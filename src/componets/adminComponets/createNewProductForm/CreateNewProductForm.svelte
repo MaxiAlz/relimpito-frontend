@@ -3,7 +3,7 @@
   import {
     httpFormDataRequest,
     httpRequest,
-  } from "../../../helpers/httpRequest";
+  } from "../../../config/helpers/httpRequest";
   import { createForm } from "svelte-forms-lib";
   import FormErrorMsg from "../../formErrorMsg/FormErrorMsg.svelte";
   import Loanding from "../../loader/Loanding.svelte";

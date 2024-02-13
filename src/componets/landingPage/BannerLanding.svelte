@@ -3,8 +3,8 @@
 
   import { createForm } from "svelte-forms-lib";
   import * as yup from "yup";
-  import { httpRequest } from "../../helpers/httpRequest";
-  import { enviarCorreoElectronico } from "../../helpers/emailHelper";
+  import { httpRequest } from "../../config/helpers/httpRequest";
+  import { enviarCorreoElectronico } from "../../config/helpers/emailHelper";
 
   const { form, errors, state, handleChange, handleSubmit } = createForm({
     initialValues: {

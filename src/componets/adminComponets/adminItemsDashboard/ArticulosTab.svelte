@@ -1,6 +1,6 @@
 <script>
   import { onMount } from "svelte";
-  import { httpRequest } from "../../../helpers/httpRequest";
+  import { httpRequest } from "../../../config/helpers/httpRequest";
   import Loanding from "../../loader/Loanding.svelte";
   import CreateNewProductForm from "../createNewProductForm/CreateNewProductForm.svelte";
   import Modal from "../../modal/Modal.svelte";

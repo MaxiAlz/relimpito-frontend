@@ -1,6 +1,6 @@
 <script>
   import { onMount } from "svelte";
-  import { httpRequest } from "../../helpers/httpRequest";
+  import { httpRequest } from "../../config/helpers/httpRequest";
   import Modal from "../modal/Modal.svelte";
   import { notifications } from "../alertsUser/alert";
 

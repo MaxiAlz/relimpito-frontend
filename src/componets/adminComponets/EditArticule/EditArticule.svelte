@@ -12,7 +12,7 @@
   import { initialValues, validationSchema } from "./editArticulesConstants";
   import { notifications } from "../../alertsUser/alert";
   import ImagenPreview from "../../imagenPreview/ImagenPreview.svelte";
-  import { httpFormDataRequest } from "../../../helpers/httpRequest";
+  import { httpFormDataRequest } from "../../../config/helpers/httpRequest";
 
   const dispatch = createEventDispatcher();
   export let selectedEditArticule;

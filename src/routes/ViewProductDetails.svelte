@@ -1,6 +1,6 @@
 <script>
   import { onMount } from "svelte";
-  import { httpRequest } from "../helpers/httpRequest";
+  import { httpRequest } from "../config/helpers/httpRequest";
   import { notifications } from "../componets/alertsUser/alert";
   import CarrouselProductImage from "../componets/imagenPreview/CarrouselProductImage.svelte";
   import { addAnItemInShoppingCart } from "../stores/shoppingCart";

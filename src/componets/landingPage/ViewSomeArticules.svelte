@@ -1,7 +1,7 @@
 <script>
   import { onMount } from "svelte";
   import { navigate } from "svelte-routing";
-  import { httpRequest } from "../../helpers/httpRequest";
+  import { httpRequest } from "../../config/helpers/httpRequest";
   import CardProduct from "../viewProducts/CardProduct.svelte";
   import hardcoreProducts from "../../DB_Local/products.json";
 

@@ -1,7 +1,7 @@
 <script>
   import * as yup from "yup";
   import { onMount } from "svelte";
-  import { httpRequest } from "../../helpers/httpRequest";
+  import { httpRequest } from "../../config/helpers/httpRequest";
   import Modal from "../modal/Modal.svelte";
   import FormErrorMsg from "../formErrorMsg/FormErrorMsg.svelte";
   import { createForm } from "svelte-forms-lib";

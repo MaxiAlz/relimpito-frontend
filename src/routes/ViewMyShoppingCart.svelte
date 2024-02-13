@@ -1,6 +1,6 @@
 <script>
   import { onMount } from "svelte";
-  import { httpRequest } from "../helpers/httpRequest";
+  import { httpRequest } from "../config/helpers/httpRequest";
   import {
     addAnItemInShoppingCart,
     addSomeProductInCart,

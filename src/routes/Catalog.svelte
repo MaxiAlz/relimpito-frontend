@@ -2,7 +2,7 @@
   import { onMount } from "svelte";
   import { navigate } from "svelte-routing";
   import CardProduct from "../componets/viewProducts/CardProduct.svelte";
-  import { httpRequest } from "../helpers/httpRequest";
+  import { httpRequest } from "../config/helpers/httpRequest";
 
   let products = [];
   let isloading = false;

@@ -1,6 +1,6 @@
 import axios from 'axios';
-import { getStorageTokenUser } from '../stores/sesionManager';
-import { notifications } from '../componets/alertsUser/alert';
+import { getStorageTokenUser } from '../../stores/sesionManager';
+import { notifications } from '../../componets/alertsUser/alert';
 
 /**
 * @param {String} url - URL del servicio que se quiere consumir.
