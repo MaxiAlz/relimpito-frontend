@@ -1,0 +1,1 @@
+<!-- crear una tabala que se reciba los argumentos y se pueda usar en todos los lugares que requiera tablas -->
