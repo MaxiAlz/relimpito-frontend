@@ -19,12 +19,14 @@
   export let urlRouting = "";
   let pathUrl = window.location.pathname;
 
-  $: console.log("userDataRelimpito :>> ", $userDataRelimpito);
+  // $: console.log("userDataRelimpito :>> ", $userDataRelimpito);
 
-  console.log(
-    '!pathUrl.startsWith("/admin") :>> ',
-    !pathUrl.startsWith("/admin")
-  );
+  // console.log(
+  //   '!pathUrl.startsWith("/admin") :>> ',
+  //   !pathUrl.startsWith("/admin")
+  // );
+
+  console.log("import. :>> ", import.meta.env.VITE_MAILGUN_API_KEY);
 </script>
 
 <AlertToast />

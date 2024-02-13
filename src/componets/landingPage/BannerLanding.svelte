@@ -1,5 +1,51 @@
 <script>
   import isotipoRelimpito from "../../assets/ISOTIPO AMARILLO.png";
+
+  import { createForm } from "svelte-forms-lib";
+  import * as yup from "yup";
+  import { httpRequest } from "../../helpers/httpRequest";
+  import { enviarCorreoElectronico } from "../../helpers/emailHelper";
+
+  const { form, errors, state, handleChange, handleSubmit } = createForm({
+    initialValues: {
+      message: "",
+      email: "",
+      company: "",
+    },
+    validationSchema: yup.object().shape({
+      message: yup.string().required(),
+      company: yup.string().required(),
+      email: yup.string().email().required(),
+    }),
+    onSubmit: (values) => {
+      // alert(JSON.stringify(values));
+      console.log("values :>> ", values);
+      enviarCorreoElectronico();
+    },
+  });
+
+  const sendEmailAsd = (data) => {
+    try {
+      const response = httpRequest("url", "POST", data);
+      // const response = await fetch("URL_DE_LA_API_DE_MAILGUN", {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //     Authorization: "Basic " + btoa("api:API_KEY_DE_MAILGUN"),
+      //   },
+      //   body: JSON.stringify(datosFormulario),
+      // });
+
+      if (response) {
+        alert("Mensaje enviado con éxito");
+      } else {
+        alert("Error al enviar el mensaje. Por favor, inténtalo de nuevo.");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Error al enviar el mensaje. Por favor, inténtalo de nuevo.");
+    }
+  };
 </script>
 
 <section class="">
@@ -22,36 +68,65 @@
       </div>
     </div>
 
-    <div
-      class="m-2 p-5 flex flex-col justify-center bg-neutral bg-opacity-20 containerContact"
+    <button class="btn" on:click={() => enviarCorreoElectronico()}
+      >enviar correo</button
     >
-      <div class="flex">
-        <h4 class="font-bold text-accent text-lg">
-          Deja tus datos para recibir más información:
-        </h4>
+
+    <form on:submit={handleSubmit}>
+      <div
+        class="m-2 p-5 flex flex-col justify-center bg-neutral bg-opacity-20 containerContact"
+      >
+        <div class="flex">
+          <h4 class="font-bold text-accent text-lg">
+            Deja tus datos para recibir más información:
+          </h4>
+        </div>
+
+        <input
+          type="text"
+          placeholder="Tu nombre o empresa"
+          class="input input-bordered mt-2 w-full"
+          name="company"
+          id="company"
+          on:change={handleChange}
+          on:blur={handleChange}
+          bind:value={$form.company}
+        />
+        {#if $errors.company}
+          <small>{$errors.company}</small>
+        {/if}
+        <input
+          type="email"
+          placeholder="Tu email"
+          class="input input-bordered mt-2"
+          name="email"
+          id="email"
+          on:change={handleChange}
+          on:blur={handleChange}
+          bind:value={$form.email}
+        />
+        {#if $errors.email}
+          <small>{$errors.email}</small>
+        {/if}
+        <textarea
+          class="textarea textarea-bordered mt-2"
+          placeholder="Dejanos un mesaje"
+          name="message"
+          id="message"
+          on:change={handleChange}
+          on:blur={handleChange}
+          bind:value={$form.message}
+        ></textarea>
+        {#if $errors.message}
+          <small>{$errors.message}</small>
+        {/if}
+        <button class="btn btn-secondary mt-2" type="submit">Enviar</button>
+        <p class=" text-accent my-2">
+          Un asesor de ventas se pondrá en contacto contigo para brindarte
+          información detallada sobre nuestros productos y servicios.
+        </p>
       </div>
-
-      <input
-        type="text"
-        placeholder="Tu nombre o empresa"
-        class="input input-bordered mt-2 w-full"
-      />
-
-      <input
-        type="text"
-        placeholder="Tu email"
-        class="input input-bordered mt-2"
-      />
-      <textarea
-        class="textarea textarea-bordered mt-2"
-        placeholder="Dejanos un mesaje"
-      ></textarea>
-      <button class="btn btn-secondary mt-2">Enviar</button>
-      <p class=" text-accent my-2">
-        Un asesor de ventas se pondrá en contacto contigo para brindarte
-        información detallada sobre nuestros productos y servicios.
-      </p>
-    </div>
+    </form>
   </div>
 </section>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 310"

@@ -42,7 +42,7 @@ async function httpRequest(url, method, data = null) {
       notifications.error(`Error: ${error.response.status} - ${error.response.statusText}`, 5000)
       throw new Error(`Error en la petición: ${error.response.status} - ${error.response.statusText}`);
     } else if (error.request) {
-      notifications.error('No se pudo obtener respuesta del servidor', 5000)
+      // notifications.error('No se pudo obtener respuesta del servidor', 5000)
       throw new Error('No se pudo obtener respuesta del servidor');
     }
 
@@ -76,6 +76,26 @@ try {
   }
 
 }
+
+const senEmail = async (emailValues) => {
+  try {
+    // Cambia la URL a la API de Mailgun y agrega las credenciales
+    const response = await axios.post('URL_DE_LA_API_DE_MAILGUN', emailValues, {
+      auth: {
+        username: 'api',
+        password: 'API_KEY_DE_MAILGUN',
+      },
+    });
+
+    if (response.status === 200) {
+      console.log('Correo electrónico enviado con éxito:', response.data);
+    } else {
+      console.error('Error al enviar el correo electrónico:', response.data);
+    }
+  } catch (error) {
+    console.error('Error al enviar el correo electrónico:', error);
+  }
+};
 export { httpRequest ,httpFormDataRequest}
 
 // Ejemplos de uso

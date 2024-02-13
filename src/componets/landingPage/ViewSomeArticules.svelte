@@ -3,6 +3,7 @@
   import { navigate } from "svelte-routing";
   import { httpRequest } from "../../helpers/httpRequest";
   import CardProduct from "../viewProducts/CardProduct.svelte";
+  import hardcoreProducts from "../../DB_Local/products.json";
 
   let products = [];
   let isloading = false;
@@ -21,7 +22,7 @@
 
       products = data?.data;
     } catch (error) {
-      console.log("error :>> ", error);
+      console.error("error :>> ", error);
     }
     isloading = false;
   };
@@ -39,13 +40,22 @@
   {#if isloading}
     <span class="loading loading-spinner loading-lg text-primary" />
   {/if}
-  {#if !isloading && !products.length}
+  {#if !isloading && !products.length && !hardcoreProducts}
     <h2 class="p-5 text-center">
       No se pudo obtener la lista de articulos, pruebe mas tarde.
     </h2>
   {/if}
+
   {#if products.length > 0}
     {#each products as product (product.id)}
+      <button on:click={() => viewProduct(product.id)}>
+        <CardProduct dataProduct={product} />
+      </button>
+    {/each}
+  {/if}
+
+  {#if !products.length && !isloading}
+    {#each hardcoreProducts.data as product (product.id)}
       <button on:click={() => viewProduct(product.id)}>
         <CardProduct dataProduct={product} />
       </button>

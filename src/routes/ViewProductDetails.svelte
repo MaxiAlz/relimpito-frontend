@@ -4,12 +4,20 @@
   import { notifications } from "../componets/alertsUser/alert";
   import CarrouselProductImage from "../componets/imagenPreview/CarrouselProductImage.svelte";
   import { addAnItemInShoppingCart } from "../stores/shoppingCart";
+  import hardcoreProducts from "../DB_Local/products.json";
+  import Loanding from "../componets/loader/Loanding.svelte";
 
   export let routerParams;
   let productData;
   let imagesUrl = [];
   let isloading = false;
   let indexPhoto = 1;
+  let hardcoreProduct;
+  // let hardcoreProduct = hardcoreProducts.data.find(
+  //   (item) => item.id === parseInt(routerParams.idProduct)
+  // );
+
+  $: console.log("hardcoreProduct :>> ", hardcoreProduct);
 
   onMount(() => {
     getArticuleById();
@@ -26,7 +34,12 @@
       imagesUrl = productData.attributes.productPhoto.data;
     } catch (error) {
       console.error("Error al ver producto :>> ", error);
-      notifications.error("Error al ver producto");
+      // notifications.error("Error al ver producto");
+      productData = hardcoreProducts.data.find(
+        (item) => item.id === parseInt(routerParams.idProduct)
+      );
+
+      imagesUrl = productData.attributes.productPhoto.data;
     } finally {
       isloading = false;
     }
@@ -62,8 +75,8 @@
   };
 </script>
 
-{#if isloading && productData}
-  <div class="flex flex-col gap-4 w-52">
+{#if isloading && !productData}
+  <!-- <div class="flex flex-col gap-4 w-52">
     <div class="flex gap-4 items-center">
       <div class="skeleton w-16 h-16 rounded-full shrink-0" />
       <div class="flex flex-col gap-4">
@@ -71,7 +84,10 @@
         <div class="skeleton h-4 w-28" />
       </div>
     </div>
-    <div class="skeleton h-32 w-full" />
+    <div class="skeleton h-32 w-full bg-primary" />
+  </div> -->
+  <div class="flex w-full items-center justify-center h-96">
+    <span class="loading loading-spinner loading-lg text-primary" />
   </div>
 {/if}
 {#if !isloading}
